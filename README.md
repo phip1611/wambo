@@ -1,4 +1,4 @@
-# wambo - a binary from a developer for developers
+# wambo - All-in-one binary that converts decimal/bin/hex + interprets input(bytes) as several (un)signed data types
 
 **wambo** is a binary that can easily shows you a value in all important
 numeral systems (bin, hex, dec) + interprets the input as both signed 

@@ -1,7 +1,7 @@
 [package]
 name = "wambo"
-description = "Wambo - Converter for Decimal/Bin/Hex + interprets input as several signed data types. A binary/CLI by a developer for developers."
-version = "0.1.2"
+description = "Wambo - All-in-one binary that converts decimal/bin/hex + interprets input(bytes) as several (un)signed data types. A binary from a developer for developers."
+version = "0.1.3"
 authors = ["Philipp Schuster <phip1611@gmail.com>"]
 edition = "2018"
 keywords = ["converter", "binary", "hex", "hexadecimal", "bytes"]

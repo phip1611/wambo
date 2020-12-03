@@ -74,7 +74,7 @@ impl Parsed {
 }
 
 #[derive(Debug, PartialEq)]
-enum NumeralSystem {
+pub enum NumeralSystem {
     Decimal,
     Bin,
     Hex,
@@ -163,7 +163,7 @@ fn input_valid(normalized_: &str) -> bool {
 
 
 #[derive(Debug, PartialEq, Copy, Clone)]
-enum Unit {
+pub enum Unit {
     Base,
     Kilo,
     Mega,
