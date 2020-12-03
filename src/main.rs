@@ -64,15 +64,15 @@ fn main() {
     println!();
     println!("interpreting input as: file sizes / number of bytes");
     println!(" B     : {}", number);
-    println!("KB     : {:.3}", number_f64 / 1E3);
-    println!("MB     : {:.3}", number_f64 / 1E6);
-    println!("GB     : {:.3}", number_f64 / 1E9);
+    println!("KB     : {:.7}", number_f64 / 1E3);
+    println!("MB     : {:.7}", number_f64 / 1E6);
+    println!("GB     : {:.7}", number_f64 / 1E9);
     println!();
     // TODO is base the right word?!
     println!("interpreting input as: *ibi-bytes (1024 (=multiple of 2) as base instead of 1000)");
-    println!("KiB    : {:.3}", number_f64 / 1024_f64);
-    println!("MiB    : {:.3}", number_f64 / 1024_f64.powf(2_f64));
-    println!("GiB    : {:>5.3}", number_f64 / 1024_f64.powf(3_f64));
+    println!("KiB    : {:.7}", number_f64 / 1024_f64);
+    println!("MiB    : {:.7}", number_f64 / 1024_f64.powf(2_f64));
+    println!("GiB    : {:.7}", number_f64 / 1024_f64.powf(3_f64));
 }
 
 

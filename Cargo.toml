@@ -1,10 +1,16 @@
 [package]
 name = "wambo"
-description = "Wambo - Decimal, Hex, Bin number + byte converter. Binary/CLI by a developer - for developers."
-version = "0.1.0"
+description = "Wambo - Converter for Decimal/Bin/Hex + interprets input as several signed data types. A binary/CLI by a developer for developers."
+version = "0.1.1"
 authors = ["Philipp Schuster <phip1611@gmail.com>"]
 edition = "2018"
+keywords = ["converter", "binary", "hex", "hexadecimal", "bytes"]
+categories = []
+readme = "README.md"
 license = "MIT"
+homepage = "https://github.com/phip1611/wambo"
+repository = "https://github.com/phip1611/wambo"
+documentation = "https://docs.rs/wambo/"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
