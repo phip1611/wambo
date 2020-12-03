@@ -54,25 +54,29 @@ fn main() {
     println!("hex    : {}", format_hex(number));
     println!("bin    : {}", format_bin(number));
     println!();
-    println!("interpreting input as: several signed data types");
-    println!(" i8 (decimal): {}", number as i8);
-    println!("i16 (decimal): {}", number as i16);
-    println!("i32 (decimal): {}", number as i32);
-    println!("i64 (decimal): {}", number as i64);
-    println!("f32 (decimal): {:.7} (bits interpreted as IEEE-754)", f32::from_ne_bytes((number as i32).to_ne_bytes()));
-    println!("f64 (decimal): {:.7} (bits interpreted as IEEE-754)", f64::from_ne_bytes(number.to_ne_bytes()));
+    println!("interpreting input as: several (un)signed data types");
+    println!(" u8 (decimal): {:>15}", number as u8);
+    println!(" i8 (decimal): {:>15}", number as i8);
+    println!("u16 (decimal): {:>15}", number as u16);
+    println!("i16 (decimal): {:>15}", number as i16);
+    println!("u32 (decimal): {:>15}", number as u32);
+    println!("i32 (decimal): {:>15}", number as i32);
+    println!("u64 (decimal): {:>15}", number as u64);
+    println!("i64 (decimal): {:>15}", number as i64);
+    println!("f32 (decimal): {:>23.7} (bits interpreted as IEEE-754)", f32::from_ne_bytes((number as i32).to_ne_bytes()));
+    println!("f64 (decimal): {:>23.7} (bits interpreted as IEEE-754)", f64::from_ne_bytes(number.to_ne_bytes()));
     println!();
     println!("interpreting input as: file sizes / number of bytes");
-    println!(" B     : {}", number);
-    println!("KB     : {:.7}", number_f64 / 1E3);
-    println!("MB     : {:.7}", number_f64 / 1E6);
-    println!("GB     : {:.7}", number_f64 / 1E9);
+    println!(" B     : {:>13}", number);
+    println!("KB     : {:>21.7}", number_f64 / 1E3);
+    println!("MB     : {:>21.7}", number_f64 / 1E6);
+    println!("GB     : {:>21.7}", number_f64 / 1E9);
     println!();
     // TODO is base the right word?!
     println!("interpreting input as: *ibi-bytes (1024 (=multiple of 2) as base instead of 1000)");
-    println!("KiB    : {:.7}", number_f64 / 1024_f64);
-    println!("MiB    : {:.7}", number_f64 / 1024_f64.powf(2_f64));
-    println!("GiB    : {:.7}", number_f64 / 1024_f64.powf(3_f64));
+    println!("KiB    : {:>21.7}", number_f64 / 1024_f64);
+    println!("MiB    : {:>21.7}", number_f64 / 1024_f64.powf(2_f64));
+    println!("GiB    : {:>21.7}", number_f64 / 1024_f64.powf(3_f64));
 }
 
 
