@@ -19,30 +19,29 @@ all values that are interesting to developers. Example output: \
 So `$ wambo 0xc0e00000` results in *(you can find the -7 in the f32 line)*:
 
 ```
-interpreting input as: unsigned integer
+### interpreting as: different numeral systems (unsigned) ###
 decimal: 3235905536
 hex    : 0x00_00_00_00_c0_e0_00_00 (64bit)
 bin    : 0b00000000_00000000_00000000_00000000_11000000_11100000_00000000_00000000 (64bit)
 
-interpreting input as: several (un)signed data types
- u8 (decimal):               0
- i8 (decimal):               0
-u16 (decimal):               0
-i16 (decimal):               0
-u32 (decimal):      3235905536
-i32 (decimal):     -1059061760
-u64 (decimal):      3235905536
-i64 (decimal):      3235905536
-f32 (decimal):              -7.0000000 (bits interpreted as IEEE-754)
-f64 (decimal):               0.0000000 (bits interpreted as IEEE-754)
+### interpreting as: several (un)signed data types (decimal) ###
+ u8:          0
+ i8:          0
+u16:          0
+i16:          0
+i32: -1059061760
+u64: 3235905536
+i64: 3235905536
+f32:         -7.0000000 (bits interpreted as IEEE-754)
+f64:          0.0000000 (bits interpreted as IEEE-754)
 
-interpreting input as: file sizes / number of bytes
+### interpreting as: bytes/size ###
  B     :    3235905536
 KB     :       3235905.5360000
 MB     :          3235.9055360
 GB     :             3.2359055
 
-interpreting input as: *ibi-bytes (1024 (=multiple of 2) as base instead of 1000)
+### interpreting as: *ibi-bytes (1024 (=multiple of 2) as base instead of 1000) ###
 KiB    :       3160064.0000000
 MiB    :          3086.0000000
 GiB    :             3.0136719
