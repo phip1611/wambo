@@ -35,7 +35,7 @@ mod unit;
 /// Regex using named capture groups to validate the input.
 /// Valid all are lower case inputs in all four known numeral systems
 /// in all known units and with either minus sign or none.
-pub const INPUT_REGEX: &str = "^(?P<sign>-)?(?P<ns>0(b|o|x){1})?(?P<value>[0-9abcdef]+)(?P<unit>gib|gi|mib|mi|kib|ki|gb|mb|kb|g|m|k)?$";
+pub const INPUT_REGEX: &str = "^(?P<sign>-)?(?P<ns>0(b|o|x){1})?(?P<value>[0-9abcdef]+)(?P<unit>[a-z]{1,4})?$";
 
 /// Takes the input, normalizes it, checks if it is valid
 /// and transform it into an usize value.
@@ -47,7 +47,7 @@ pub fn parse_input(input: &str) -> Result<Parsed, ParseError> {
     let input_split = get_input_split(&normalized_input)?;
 
     let numeral_system = NumeralSystem::from_input(input_split.ns.unwrap_or(""));
-    let unit = Unit::from_input(input_split.unit.unwrap_or(""));
+    let unit = Unit::from_input(input_split.unit.unwrap_or(""))?;
     let sign = Sign::from_input(input_split.sign.unwrap_or(""));
     let value_str = input_split.value.unwrap().to_owned();
 

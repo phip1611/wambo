@@ -21,6 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+//! TODO
+
 mod parse;
 
 use std::process::exit;
@@ -49,10 +51,22 @@ fn main() {
     let number = parsed.value();
 
     let number_f64 = number as f64;
-    println!("### interpreting as: different numeral systems (unsigned) ###");
-    println!("decimal: {}", number);
-    println!("hex    : {}", format_hex(number));
-    println!("bin    : {}", format_bin(number));
+    println!("### interpreting as: different numeral systems ###");
+    // even if IDE tells that sign() needs Display trait. It gets implemented
+    // during build time
+    println!("decimal:   {}{}", parsed.sign(), number);
+    println!("bin    : {}0b{:b}", parsed.sign(), number);
+    println!("octal  : {}0o{:o}", parsed.sign(), number);
+    println!("hex    : {}0x{:x}", parsed.sign(), number);
+    println!();
+
+    println!("### interpreting as: bits (u64) ###");
+    // even if IDE tells that sign() needs Display trait. It gets implemented
+    // during build time
+    println!("bin (Rust-style): {}", format_bin_rust_style(number));
+    println!("bin (C-style)   : 0b{:064b}", number);
+    println!("hex (Rust-style): {}", format_hex_rust_style(number));
+    println!("hex (C-style)   : 0x{:016x}", number);
     println!();
     println!("### interpreting as: several (un)signed data types (decimal) ###");
     println!(" u8: {:>15}", number as u8);
@@ -62,8 +76,8 @@ fn main() {
     println!("i32: {:>15}", number as i32);
     println!("u64: {:>15}", number as u64);
     println!("i64: {:>15}", number as i64);
-    println!("f32: {:>23.7} (bits interpreted as IEEE-754)", f32::from_ne_bytes((number as i32).to_ne_bytes()));
-    println!("f64: {:>23.7} (bits interpreted as IEEE-754)", f64::from_ne_bytes(number.to_ne_bytes()));
+    println!("f32: {:>23.7} (IEEE-754)", f32::from_ne_bytes((number as i32).to_ne_bytes()));
+    println!("f64: {:>23.7} (IEEE-754)", f64::from_ne_bytes(number.to_ne_bytes()));
     println!();
     println!("### interpreting as: bytes/size ###");
     println!(" B     : {:>13}", number);
@@ -81,13 +95,13 @@ fn main() {
 
 
 
-fn format_hex(number: usize) -> String {
+fn format_hex_rust_style(number: u64) -> String {
     let string_fixed_len = format!("{:016x}", number);
-    let formatted = format_num_add_delimiters(&string_fixed_len, 2);
+    let formatted = format_num_add_delimiters(&string_fixed_len, 4);
     format!("0x{} (64bit)", formatted)
 }
 
-fn format_bin(number: usize) -> String {
+fn format_bin_rust_style(number: u64) -> String {
     let string_fixed_len = format!("{:064b}", number);
     let formatted = format_num_add_delimiters(&string_fixed_len, 8);
     format!("0b{} (64bit)", formatted)

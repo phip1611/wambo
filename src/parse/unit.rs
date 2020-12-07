@@ -25,6 +25,7 @@ SOFTWARE.
 //! Parsing code for unit.
 
 use derive_more::Display;
+use crate::parse::error::ParseError;
 
 #[derive(Debug, PartialEq, Copy, Clone, Display)]
 pub enum Unit {
@@ -49,17 +50,19 @@ impl Unit {
     /// Parses the [`NumeralSystem`] from the normalized and validated slice of the input
     /// that corresponds to this type.
     /// * `part_str` slice of normalized and validated user input that corresponds to this type
-    pub fn from_input(normalized_input: &str) -> Unit {
-        match normalized_input {
+    pub fn from_input(part_str: &str) -> Result<Unit, ParseError> {
+        let x = match part_str {
             // attention! must match our regex!
+            "" => { Unit::Base },
             "k" | "kb" => { Unit::Kilo },
             "m" | "mb" => { Unit::Mega },
             "g" | "gb" => { Unit::Giga },
             "ki" | "kib" => { Unit::Kibi },
             "mi" | "mib" => { Unit::Mibi },
             "gi" | "gib" => { Unit::Gibi },
-            _ => { Unit::Base },
-        }
+            _ => { return Err(ParseError::InvalidUnit(part_str.to_owned())) },
+        };
+        Ok(x)
     }
 
     /// Transforms a value in a specific value into the base unit.
@@ -85,12 +88,13 @@ mod tests {
     fn test_parse_unit() {
         // only lowercase here
         // because user input gets transformed to lowercase
-        assert_eq!(Unit::Base, Unit::from_input(""), "Must be Unit::Base");
-        assert_eq!(Unit::Kilo, Unit::from_input("k"), "Must be Unit::Kilo");
-        assert_eq!(Unit::Kibi, Unit::from_input("ki"), "Must be Unit::Kibi");
-        assert_eq!(Unit::Kibi, Unit::from_input("kib"), "Must be Unit::Kibi");
-        assert_eq!(Unit::Mega, Unit::from_input("m"), "Must be Unit::Mega");
-        assert_eq!(Unit::Giga, Unit::from_input("gb"), "Must be Unit::Giga");
+        assert_eq!(Unit::Base, Unit::from_input("").unwrap(), "Must be Unit::Base");
+        assert_eq!(Unit::Kilo, Unit::from_input("k").unwrap(), "Must be Unit::Kilo");
+        assert_eq!(Unit::Kibi, Unit::from_input("ki").unwrap(), "Must be Unit::Kibi");
+        assert_eq!(Unit::Kibi, Unit::from_input("kib").unwrap(), "Must be Unit::Kibi");
+        assert_eq!(Unit::Mega, Unit::from_input("m").unwrap(), "Must be Unit::Mega");
+        assert_eq!(Unit::Giga, Unit::from_input("gb").unwrap(), "Must be Unit::Giga");
+        assert!(Unit::from_input("afaf").is_err());
     }
 
 }
