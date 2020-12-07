@@ -46,7 +46,7 @@ fn main() {
         exit(-1);
     }
     let parsed = number.unwrap();
-    let number = parsed.actual_value();
+    let number = parsed.value();
 
     let number_f64 = number as f64;
     println!("### interpreting as: different numeral systems (unsigned) ###");

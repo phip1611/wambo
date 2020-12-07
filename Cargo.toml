@@ -16,3 +16,6 @@ documentation = "https://docs.rs/wambo/"
 
 [dependencies]
 regex = "1.4.2"
+derive_more = "0.99.11"
+# derive_more = { version = "0.99.11", features = ["derive"] }
+
