@@ -66,17 +66,42 @@ impl Unit {
     }
 
     /// Transforms a value in a specific value into the base unit.
-    pub fn value_to_base(&self, value: usize) -> usize {
+    pub fn base_to_target(self, value: f64) -> f64 {
         match self {
             Unit::Base => { value }
-            Unit::Kilo => { value * 1E3 as usize }
-            Unit::Mega => { value * 1E6 as usize }
-            Unit::Giga => { value * 1E9 as usize }
-            Unit::Kibi => { value * 1024_usize }
-            Unit::Mibi => { value * 1024_usize.pow(2) }
-            Unit::Gibi => { value * 1024_usize.pow(3) }
+            Unit::Kilo => { value / 1E3_f64 }
+            Unit::Mega => { value / 1E6_f64 }
+            Unit::Giga => { value / 1E9_f64 }
+            Unit::Kibi => { value / 1024_f64 }
+            Unit::Mibi => { value / 1024_f64.powf(2_f64) }
+            Unit::Gibi => { value / 1024_f64.powf(3_f64) }
         }
     }
+
+    pub fn value_to_base_f64(self, value: f64) -> f64 {
+        match self {
+            Unit::Base => { value }
+            Unit::Kilo => { value * 1E3_f64 }
+            Unit::Mega => { value * 1E6_f64 }
+            Unit::Giga => { value * 1E9_f64 }
+            Unit::Kibi => { value * 1024_f64 }
+            Unit::Mibi => { value * 1024_f64.powf(2_f64) }
+            Unit::Gibi => { value * 1024_f64.powf(3_f64) }
+        }
+    }
+
+    /*/// Transforms a value in a specific value into the base unit.
+    pub fn value_to_base_u64(self, value: u64) -> u64 {
+        match self {
+            Unit::Base => { value }
+            Unit::Kilo => { value * 1E3 as u64 }
+            Unit::Mega => { value * 1E6 as u64 }
+            Unit::Giga => { value * 1E9 as u64 }
+            Unit::Kibi => { value * 1024_u64 }
+            Unit::Mibi => { value * 1024_u64.pow(2) }
+            Unit::Gibi => { value * 1024_u64.pow(3) }
+        }
+    }*/
 }
 
 #[cfg(test)]

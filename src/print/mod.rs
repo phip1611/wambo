@@ -1,8 +1,9 @@
 use derive_more::Display;
-use crate::parse::Parsed;
+use crate::parse::{Parsed};
 use std::fmt::Display;
 use regex::Regex;
 use crate::print::fraction_fmt::fmt_align_fraction_strings;
+use crate::parse::unit::Unit;
 
 mod fraction_fmt;
 
@@ -12,6 +13,8 @@ pub fn build_output_groups(parsed: Parsed) -> Vec<OutputGroup> {
         build_bits_og(&parsed),
         build_un_and_signed_integers_og(&parsed),
         build_ieee754_og(&parsed),
+        build_bytes(&parsed),
+        build_ibi_bytes(&parsed),
     ]
 }
 
@@ -129,6 +132,58 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
     }
 }
 
+fn build_bytes(parsed: &Parsed) -> OutputGroup {
+    let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
+    OutputGroup {
+        title: Interpretation::Bytes,
+        value_alignment: ValueAlignment::Right,
+        interpretations: vec![
+            OutputLine {
+                key: " B".to_string(),
+                value: format!("{}", base_value_f64),
+            },
+            OutputLine {
+                key: " KB".to_string(),
+                value: format!("{}", Unit::base_to_target(Unit::Kilo, base_value_f64)),
+            },
+            OutputLine {
+                key: " MB".to_string(),
+                value: format!("{}", Unit::base_to_target(Unit::Mega, base_value_f64)),
+            },
+            OutputLine {
+                key: " GB".to_string(),
+                value: format!("{}", Unit::base_to_target(Unit::Giga, base_value_f64)),
+            },
+        ]
+    }
+}
+
+fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
+    let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
+    OutputGroup {
+        title: Interpretation::Ibibytes,
+        value_alignment: ValueAlignment::Right,
+        interpretations: vec![
+            OutputLine {
+                key: " Bi".to_string(),
+                value: format!("{}", base_value_f64),
+            },
+            OutputLine {
+                key: " KiB".to_string(),
+                value: format!("{}", Unit::base_to_target(Unit::Kibi, base_value_f64)),
+            },
+            OutputLine {
+                key: " MiB".to_string(),
+                value: format!("{}", Unit::base_to_target(Unit::Mibi, base_value_f64)),
+            },
+            OutputLine {
+                key: " GiB".to_string(),
+                value: format!("{}", Unit::base_to_target(Unit::Gibi, base_value_f64)),
+            },
+        ]
+    }
+}
+
 
 #[derive(Debug, Display, Copy, Clone)]
 enum Interpretation {
@@ -209,7 +264,7 @@ impl OutputGroup {
         if self.value_alignment == ValueAlignment::Left {
             for i in &self.interpretations {
                 let spaces = longest_key - i.key.len();
-                print!("{}: ", i.key);
+                print!("{}:  ", i.key);
                 for _ in 0..spaces { print!(" ") }
                 print!("{}", i.value);
                 println!(); //print \n
@@ -223,7 +278,7 @@ impl OutputGroup {
             for i in &self.interpretations {
                 let spaces = longest_key - i.key.len()
                     + longest_value - i.value.len();
-                print!("{}: ", i.key);
+                print!("{}:  ", i.key);
                 for _ in 0..spaces { print!(" ") }
                 print!("{}", i.value);
                 println!(); //print \n

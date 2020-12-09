@@ -1,5 +1,4 @@
 use regex::Regex;
-use crossterm::tty::IsTty;
 use std::hash::Hash;
 
 /// The parts from an formatted fractional number string.

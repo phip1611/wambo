@@ -30,7 +30,7 @@ use crate::parse::sign::Sign;
 mod error;
 mod ns;
 mod sign;
-mod unit;
+pub mod unit;
 
 /// Regex using named capture groups to validate the input.
 /// Valid all are lower case inputs in all four known numeral systems
