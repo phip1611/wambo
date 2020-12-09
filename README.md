@@ -13,16 +13,18 @@ easily calculates you mibibytes to bytes, kilobytes to gibibytes and so on.
 - `$ wambo 0b10001111_00000000`
 - `$ wambo 0xf_gb` (unorthodox, but possible: 15 gigabyte)
 - `$ wambo -h` (for more help and examples)
-Just input **an unsigned number** (maximum 64bit) and **wambo** calculates
-all values that are interesting to developers. Example output: \
-"-7" is represented by 0xc0e00000 in floating point standard (IEEE-754). \
-So `$ wambo 0xc0e00000` results in *(you can find the -7 in the f32 line)*:
 
-#### Example output (screenshot)
+Just input **a integer number** (maximum 64bit, no decimal/fraction) and **wambo** calculates
+all values that are interesting to developers. **Example:** \
+"-7" is represented by `0xc0e00000` in floating point standard (IEEE-754). \
+So `$ wambo 0xc0e00000` results in the text output listed below.
+*(you can find the -7 in the f32 line!)*:
+
+#### Example output (screenshot) for '0x4000'
 ![Example output in terminal](screenshot.png "Colorful output in terminal")
 
 
-#### Example output (text)
+#### Example output (text) for '0xc0e00000' (-7 in f32)
 ```
 ### INTERPRETED AS: DIFFERENT NUMERAL SYSTEMS. ###
 Decimal:      5367865903
