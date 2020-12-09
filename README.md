@@ -18,6 +18,11 @@ all values that are interesting to developers. Example output: \
 "-7" is represented by 0xc0e00000 in floating point standard (IEEE-754). \
 So `$ wambo 0xc0e00000` results in *(you can find the -7 in the f32 line)*:
 
+#### Example output (screenshot)
+![Example output in terminal](screenshot.png "Colorful output in terminal")
+
+
+#### Example output (text)
 ```
 ### INTERPRETED AS: DIFFERENT NUMERAL SYSTEMS. ###
 Decimal:      5367865903
