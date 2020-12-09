@@ -118,6 +118,8 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
     );
     OutputGroup {
         title: Interpretation::IEEE754,
+        // not important here if left or right because the formatting
+        // utility already makes sure that all values are same length (via spaces)
         value_alignment: ValueAlignment::Left,
         interpretations: vec![
             OutputLine {
@@ -148,24 +150,25 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
     );
     OutputGroup {
         title: Interpretation::Bytes,
-        // because they are already aligned Left and not right
+        // not important here if left or right because the formatting
+        // utility already makes sure that all values are same length (via spaces)
         value_alignment: ValueAlignment::Left,
         interpretations: vec![
             OutputLine {
                 key: " B".to_string(),
-                value: fmt_vec[0].as_str().to_string(),
+                value: fmt_vec[0].to_string(),
             },
             OutputLine {
                 key: "KB".to_string(),
-                value: fmt_vec[1].as_str().to_string(),
+                value: fmt_vec[1].to_string(),
             },
             OutputLine {
                 key: "MB".to_string(),
-                value: fmt_vec[2].as_str().to_string(),
+                value: fmt_vec[2].to_string(),
             },
             OutputLine {
                 key: "GB".to_string(),
-                value: fmt_vec[3].as_str().to_string(),
+                value: fmt_vec[3].to_string(),
             },
         ],
     }
@@ -219,9 +222,9 @@ pub enum Interpretation {
     UnAndSignedIntegers,
     #[display(fmt = "Integer bits as IEEE754 (floating point numbers/fractions).")]
     IEEE754,
-    #[display(fmt = "File size in bytes (factor 1000).")]
+    #[display(fmt = "File size in bytes (factor 1000) (using f64).")]
     Bytes,
-    #[display(fmt = "File size in *ibibytes (factor 1024).")]
+    #[display(fmt = "File size in *ibibytes (factor 1024) (using f64).")]
     Ibibytes,
 }
 
