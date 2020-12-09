@@ -44,7 +44,6 @@ pub enum NumeralSystem {
 }
 
 impl NumeralSystem {
-
     /// Parses the [`NumeralSystem`] from the normalized and validated slice of the input
     /// that corresponds to this type.
     /// * `part_str` slice of normalized and validated user input that corresponds to this type
@@ -69,10 +68,25 @@ mod tests {
     #[test]
     fn test_parse_numeral_system() {
         // we test only normalized inputs here
-        assert_eq!(NumeralSystem::Bin, NumeralSystem::from_input("0b1"), "Must be NumeralSystem::Bin");
-        assert_eq!(NumeralSystem::Octal, NumeralSystem::from_input("0o1"), "Must be NumeralSystem::Octal");
-        assert_eq!(NumeralSystem::Decimal, NumeralSystem::from_input("12345"), "Must be NumeralSystem::Decimal");
-        assert_eq!(NumeralSystem::Hex, NumeralSystem::from_input("0x1"), "Must be NumeralSystem::Hex");
+        assert_eq!(
+            NumeralSystem::Bin,
+            NumeralSystem::from_input("0b1"),
+            "Must be NumeralSystem::Bin"
+        );
+        assert_eq!(
+            NumeralSystem::Octal,
+            NumeralSystem::from_input("0o1"),
+            "Must be NumeralSystem::Octal"
+        );
+        assert_eq!(
+            NumeralSystem::Decimal,
+            NumeralSystem::from_input("12345"),
+            "Must be NumeralSystem::Decimal"
+        );
+        assert_eq!(
+            NumeralSystem::Hex,
+            NumeralSystem::from_input("0x1"),
+            "Must be NumeralSystem::Hex"
+        );
     }
-
 }

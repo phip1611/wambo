@@ -26,14 +26,16 @@ SOFTWARE.
 mod parse;
 mod print;
 
-use std::process::exit;
 use crate::parse::parse_input;
 use crate::print::build_output_groups;
+use std::process::exit;
 
 fn main() {
     let args = std::env::args().collect::<Vec<String>>();
     if args.len() == 1 {
-        eprintln!("Please provide an integer input in decimal, hex (0x), octal (0o), or bin (0b) format!");
+        eprintln!(
+            "Please provide an integer input in decimal, hex (0x), octal (0o), or bin (0b) format!"
+        );
         eprintln!("Enter -h for help.");
         exit(-1);
     }
@@ -56,13 +58,6 @@ fn main() {
         println!(); // one line to separate the output groups
     }
 }
-
-
-
-
-
-
-
 
 fn show_help() {
     println!("Wambo - Decimal, Hex, Bin number + byte converter");

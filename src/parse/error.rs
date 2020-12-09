@@ -24,8 +24,8 @@ SOFTWARE.
 
 //! Parsing errors.
 
-use std::error::Error;
 use derive_more::Display;
+use std::error::Error;
 
 #[derive(Debug, Display)]
 pub enum ParseError {

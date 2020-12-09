@@ -21,11 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-use regex::Regex;
-use crate::parse::ns::{NumeralSystem};
 use crate::parse::error::ParseError;
-use crate::parse::unit::{Unit};
+use crate::parse::ns::NumeralSystem;
 use crate::parse::sign::Sign;
+use crate::parse::unit::Unit;
+use regex::Regex;
 
 mod error;
 mod ns;
@@ -35,7 +35,8 @@ pub mod unit;
 /// Regex using named capture groups to validate the input.
 /// Valid all are lower case inputs in all four known numeral systems
 /// in all known units and with either minus sign or none.
-pub const INPUT_REGEX: &str = "^(?P<sign>-)?(?P<ns>0(b|o|x){1})?(?P<value>[0-9abcdef]+)(?P<unit>[a-z]{1,4})?$";
+pub const INPUT_REGEX: &str =
+    "^(?P<sign>-)?(?P<ns>0(b|o|x){1})?(?P<value>[0-9abcdef]+)(?P<unit>[a-z]{1,4})?$";
 
 /// Takes the input, normalizes it, checks if it is valid
 /// and transform it into an usize value.
@@ -51,15 +52,13 @@ pub fn parse_input(input: &str) -> Result<Parsed, ParseError> {
     let sign = Sign::from_input(input_split.sign.unwrap_or(""));
     let value_str = input_split.value.unwrap().to_owned();
 
-    Ok(
-        Parsed::new(
-            normalized_input,
-            numeral_system,
-            value_str,
-            unit,
-            sign,
-        )
-    )
+    Ok(Parsed::new(
+        normalized_input,
+        numeral_system,
+        value_str,
+        unit,
+        sign,
+    ))
 }
 
 #[derive(Debug)]
@@ -74,8 +73,11 @@ struct InputSplit<'a> {
 /// input groups.
 fn get_input_split(normalized_input: &str) -> Result<InputSplit, ParseError> {
     let regex = Regex::new(INPUT_REGEX).unwrap();
-    let captures = regex.captures(normalized_input)
-        .ok_or(ParseError::InvalidFormat("Input doesn't match Regex".to_owned()))?;
+    let captures = regex
+        .captures(normalized_input)
+        .ok_or(ParseError::InvalidFormat(
+            "Input doesn't match Regex".to_owned(),
+        ))?;
 
     // the capture at index 0 is by definition of the crate always the main/long/full capture
     let is = InputSplit {
@@ -98,26 +100,18 @@ pub struct Parsed {
 }
 
 impl Parsed {
-
-    fn new(normalized_input: String,
-           numeral_system: NumeralSystem,
-           value_str: String,
-           unit: Unit,
-           sign: Sign,
+    fn new(
+        normalized_input: String,
+        numeral_system: NumeralSystem,
+        value_str: String,
+        unit: Unit,
+        sign: Sign,
     ) -> Self {
         let value = match numeral_system {
-            NumeralSystem::Bin => {
-                u64::from_str_radix(&value_str, 2).unwrap()
-            }
-            NumeralSystem::Octal => {
-                u64::from_str_radix(&value_str, 8).unwrap()
-            }
-            NumeralSystem::Decimal => {
-                value_str.parse::<u64>().unwrap()
-            }
-            NumeralSystem::Hex => {
-                u64::from_str_radix(&value_str, 16).unwrap()
-            }
+            NumeralSystem::Bin => u64::from_str_radix(&value_str, 2).unwrap(),
+            NumeralSystem::Octal => u64::from_str_radix(&value_str, 8).unwrap(),
+            NumeralSystem::Decimal => value_str.parse::<u64>().unwrap(),
+            NumeralSystem::Hex => u64::from_str_radix(&value_str, 16).unwrap(),
         };
 
         Self {
@@ -169,11 +163,8 @@ impl Parsed {
 
 /// Removes all '_' from the input and transforms it to lowercase.
 fn normalize_input(input: &str) -> String {
-    input.trim()
-        .replace('_', "")
-        .to_lowercase()
+    input.trim().replace('_', "").to_lowercase()
 }
-
 
 #[cfg(test)]
 mod tests {

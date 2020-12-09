@@ -35,7 +35,6 @@ pub enum Sign {
 }
 
 impl Sign {
-
     /// Parses the [`NumeralSystem`] from the normalized and validated slice of the input
     /// that corresponds to this type.
     /// * `part_str` slice of normalized and validated user input that corresponds to this type
@@ -50,8 +49,8 @@ impl Sign {
     /// Convenient function to check if the sign is positive.
     pub fn is_pos(&self) -> bool {
         match self {
-            Sign::Positive => { true }
-            Sign::Negative => { false}
+            Sign::Positive => true,
+            Sign::Negative => false,
         }
     }
 
@@ -70,8 +69,15 @@ mod tests {
     #[test]
     fn test_parse_numeral_system() {
         // we test only normalized inputs here
-        assert_eq!(Sign::Positive, Sign::from_input(""), "Must be Sign::Positive");
-        assert_eq!(Sign::Negative, Sign::from_input("-"), "Must be Sign::Negative");
+        assert_eq!(
+            Sign::Positive,
+            Sign::from_input(""),
+            "Must be Sign::Positive"
+        );
+        assert_eq!(
+            Sign::Negative,
+            Sign::from_input("-"),
+            "Must be Sign::Negative"
+        );
     }
-
 }
