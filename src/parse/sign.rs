@@ -56,6 +56,7 @@ impl Sign {
     }
 
     /// Convenient function to check if the sign is positive.
+    #[allow(dead_code)]
     pub fn is_neg(&self) -> bool {
         !self.is_pos()
     }

@@ -64,6 +64,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "fraction_list_fmt_align"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fc92669eb44fba9abc8ce454d060b9f059f3c4134b1e4a6f51e22d54212bba26"
+dependencies = [
+ "regex",
+]
+
+[[package]]
 name = "instant"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -283,6 +292,7 @@ version = "0.1.5"
 dependencies = [
  "crossterm",
  "derive_more",
+ "fraction_list_fmt_align",
  "regex",
 ]
 

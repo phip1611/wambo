@@ -1,13 +1,13 @@
 use derive_more::Display;
 use crate::parse::{Parsed};
-use crate::print::fraction_fmt::{fmt_align_fraction_strings, fmt_align_fraction_strings_vec};
 use crate::parse::unit::Unit;
 use crossterm::style::{SetAttribute, Attribute, Print, SetForegroundColor, Color, ResetColor};
 use crossterm::ExecutableCommand;
 use std::io::stdout;
 use crossterm::tty::IsTty;
+use fraction_list_fmt_align::{FractionNumber, fmt_align_fractions};
 
-mod fraction_fmt;
+const MAX_PRECISION: u8 = 20;
 
 pub fn build_output_groups(parsed: Parsed) -> Vec<OutputGroup> {
     vec![
@@ -108,14 +108,17 @@ fn build_un_and_signed_integers_og(parsed: &Parsed) -> OutputGroup {
 }
 
 fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
-    const PRECISION: usize = 20;
     // maximum 15 digits fractional precision
     // also rounds the number at the 15'th place/digit
     let f32_num = f32::from_ne_bytes((parsed.value() as i32).to_ne_bytes());
     let f64_num = f64::from_ne_bytes(parsed.value().to_ne_bytes());
-    let f32_rust_fmt = format!("{:.1$}", f32_num, PRECISION);
-    let f64_rust_fmt = format!("{:.1$}", f64_num, PRECISION);
-    let (f32_fmt , f64_fmt) = fmt_align_fraction_strings(&f32_rust_fmt, &f64_rust_fmt);
+    let fmt_vec = fmt_align_fractions(
+        &vec![
+            FractionNumber::F32(f32_num),
+            FractionNumber::F64(f64_num),
+        ],
+        MAX_PRECISION as u8
+    );
     OutputGroup {
         title: Interpretation::IEEE754,
         value_alignment: ValueAlignment::Right,
@@ -123,12 +126,12 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
             OutputLine {
                 key: "f32".to_string(),
                 // value: format!("'{}'", f32_fmt),
-                value: f32_fmt,
+                value: fmt_vec[0].as_str().to_string(),
             },
             OutputLine {
                 key: "f64".to_string(),
                 // value: format!("'{}'", f64_fmt),
-                value: f64_fmt,
+                value: fmt_vec[1].as_str().to_string(),
             },
         ]
     }
@@ -136,20 +139,20 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
 
 fn build_bytes(parsed: &Parsed) -> OutputGroup {
     let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
-    let fmt_vec = vec![
-        format!("{}", base_value_f64),
-        format!("{}", Unit::base_to_target(Unit::Kilo, base_value_f64)),
-        format!("{}", Unit::base_to_target(Unit::Mega, base_value_f64)),
-        format!("{}", Unit::base_to_target(Unit::Giga, base_value_f64)),
-    ];
-    let fmt_vec = fmt_align_fraction_strings_vec(
-        fmt_vec.iter()
-            .map(|x| x.as_str())
-            .collect()
+
+    let fmt_vec = fmt_align_fractions(
+        &vec![
+            FractionNumber::F64(base_value_f64),
+            FractionNumber::F64(Unit::base_to_target(Unit::Kilo, base_value_f64)),
+            FractionNumber::F64(Unit::base_to_target(Unit::Mega, base_value_f64)),
+            FractionNumber::F64(Unit::base_to_target(Unit::Giga, base_value_f64)),
+        ],
+        MAX_PRECISION
     );
     OutputGroup {
         title: Interpretation::Bytes,
-        value_alignment: ValueAlignment::Right,
+        // because they are already aligned Left and not right
+        value_alignment: ValueAlignment::Left,
         interpretations: vec![
             OutputLine {
                 key: " B".to_string(),
@@ -173,20 +176,19 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
 
 fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
     let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
-    let fmt_vec = vec![
-        format!("{}", base_value_f64),
-        format!("{}", Unit::base_to_target(Unit::Kibi, base_value_f64)),
-        format!("{}", Unit::base_to_target(Unit::Mibi, base_value_f64)),
-        format!("{}", Unit::base_to_target(Unit::Gibi, base_value_f64)),
-    ];
-    let fmt_vec = fmt_align_fraction_strings_vec(
-        fmt_vec.iter()
-            .map(|x| x.as_str())
-            .collect()
+    let fmt_vec = fmt_align_fractions(
+        &vec![
+            FractionNumber::F64(base_value_f64),
+            FractionNumber::F64(Unit::base_to_target(Unit::Kibi, base_value_f64)),
+            FractionNumber::F64(Unit::base_to_target(Unit::Mibi, base_value_f64)),
+            FractionNumber::F64(Unit::base_to_target(Unit::Gibi, base_value_f64)),
+        ],
+        MAX_PRECISION
     );
     OutputGroup {
         title: Interpretation::Ibibytes,
-        value_alignment: ValueAlignment::Right,
+        // because they are already aligned Left and not right
+        value_alignment: ValueAlignment::Left,
         interpretations: vec![
             OutputLine {
                 key: " Bi".to_string(),
@@ -209,8 +211,10 @@ fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
 }
 
 
+/// Describes the kind of an output group that is dedicated to
+/// a specific class of interpretations.
 #[derive(Debug, Display, Copy, Clone)]
-enum Interpretation {
+pub enum Interpretation {
     #[display(fmt = "Different numeral systems.")]
     NumeralSystems,
     #[display(fmt = "64bit in memory (big endian byte representation).")]
@@ -265,9 +269,12 @@ impl OutputGroup {
             .max().unwrap()
     }
 
+    #[allow(dead_code)]
     pub fn title(&self) -> Interpretation {
         self.title
     }
+
+    #[allow(dead_code)]
     pub fn interpretations(&self) -> &Vec<OutputLine> {
         &self.interpretations
     }

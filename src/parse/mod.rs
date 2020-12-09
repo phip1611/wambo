@@ -131,16 +131,19 @@ impl Parsed {
     }
 
     /// Getter for `normalized_input`.
+    #[allow(dead_code)]
     pub fn normalized_input(&self) -> &str {
         &self.normalized_input
     }
 
     /// Getter for `numeral_system`.
+    #[allow(dead_code)]
     pub fn numeral_system(&self) -> NumeralSystem {
         self.numeral_system
     }
 
     /// Getter for `sign`.
+    #[allow(dead_code)]
     pub fn sign(&self) -> Sign {
         self.sign
     }
@@ -153,6 +156,7 @@ impl Parsed {
 
     /// Getter for `value_str`. The actual number
     /// but without numeral system or unit.
+    #[allow(dead_code)]
     pub fn value_str(&self) -> u64 {
         self.value
     }

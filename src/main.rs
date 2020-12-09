@@ -28,20 +28,12 @@ mod print;
 
 use std::process::exit;
 use crate::parse::parse_input;
-use std::io::{stdout, Write};
-use crossterm::{
-    execute,
-    style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
-    ExecutableCommand, Result,
-    event,
-};
-use crossterm::style::{SetAttribute, Attribute};
 use crate::print::build_output_groups;
 
 fn main() {
     let args = std::env::args().collect::<Vec<String>>();
     if args.len() == 1 {
-        eprintln!("Please provide an integer input in decimal, hex (0x), or bin (0b) format!");
+        eprintln!("Please provide an integer input in decimal, hex (0x), octal (0o), or bin (0b) format!");
         eprintln!("Enter -h for help.");
         exit(-1);
     }
