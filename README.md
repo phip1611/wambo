@@ -1,4 +1,4 @@
-# wambo - All-in-one binary that converts decimal/bin/hex + interprets input(bytes) as several (un)signed data types
+# wambo - All-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64, and f32/f64.
 
 **wambo** is a binary that can easily shows you a numeric value in all important
 numeral systems (bin, hex, dec) + interprets the input as both signed 
