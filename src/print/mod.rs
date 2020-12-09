@@ -118,7 +118,7 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
     );
     OutputGroup {
         title: Interpretation::IEEE754,
-        value_alignment: ValueAlignment::Right,
+        value_alignment: ValueAlignment::Left,
         interpretations: vec![
             OutputLine {
                 key: "f32".to_string(),
