@@ -113,7 +113,7 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
     let f32_num = f32::from_ne_bytes((parsed.value() as i32).to_ne_bytes());
     let f64_num = f64::from_ne_bytes(parsed.value().to_ne_bytes());
     let fmt_vec = fmt_align_fractions(
-        &vec![FractionNumber::F32(f32_num), FractionNumber::F64(f64_num)],
+        &[FractionNumber::F32(f32_num), FractionNumber::F64(f64_num)],
         MAX_PRECISION as u8,
     );
     OutputGroup {
@@ -138,7 +138,7 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
     let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
 
     let fmt_vec = fmt_align_fractions(
-        &vec![
+        &[
             FractionNumber::F64(base_value_f64),
             FractionNumber::F64(Unit::base_to_target(Unit::Kilo, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Mega, base_value_f64)),
@@ -174,7 +174,7 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
 fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
     let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
     let fmt_vec = fmt_align_fractions(
-        &vec![
+        &[
             FractionNumber::F64(base_value_f64),
             FractionNumber::F64(Unit::base_to_target(Unit::Kibi, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Mibi, base_value_f64)),
@@ -189,19 +189,19 @@ fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
         interpretations: vec![
             OutputLine {
                 key: " Bi".to_string(),
-                value: format!("{}", &fmt_vec[0]),
+                value: fmt_vec[0].to_string(),
             },
             OutputLine {
                 key: "KiB".to_string(),
-                value: format!("{}", &fmt_vec[1]),
+                value: fmt_vec[1].to_string(),
             },
             OutputLine {
                 key: "MiB".to_string(),
-                value: format!("{}", &fmt_vec[2]),
+                value: fmt_vec[2].to_string(),
             },
             OutputLine {
                 key: "GiB".to_string(),
-                value: format!("{}", &fmt_vec[3]),
+                value: fmt_vec[3].to_string(),
             },
         ],
     }
@@ -354,7 +354,7 @@ impl OutputGroup {
     fn print_value(&self, value: &str) {
         // in "IntelliJ/Clion > run" this is false
         let is_tty = stdout().is_tty();
-        let value_fmt = format!("{}", value);
+        let value_fmt = value.to_string();
         if is_tty {
             stdout()
                 // .execute(SetAttribute(Attribute::Bold)).unwrap()

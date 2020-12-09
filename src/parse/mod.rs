@@ -75,9 +75,7 @@ fn get_input_split(normalized_input: &str) -> Result<InputSplit, ParseError> {
     let regex = Regex::new(INPUT_REGEX).unwrap();
     let captures = regex
         .captures(normalized_input)
-        .ok_or(ParseError::InvalidFormat(
-            "Input doesn't match Regex".to_owned(),
-        ))?;
+        .ok_or_else(|| ParseError::InvalidFormat("Input doesn't match Regex".to_owned()))?;
 
     // the capture at index 0 is by definition of the crate always the main/long/full capture
     let is = InputSplit {
