@@ -188,7 +188,7 @@ fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
         value_alignment: ValueAlignment::Left,
         interpretations: vec![
             OutputLine {
-                key: " Bi".to_string(),
+                key: " iB".to_string(),
                 value: fmt_vec[0].to_string(),
             },
             OutputLine {
