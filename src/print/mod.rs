@@ -1,9 +1,11 @@
 use derive_more::Display;
 use crate::parse::{Parsed};
-use std::fmt::Display;
-use regex::Regex;
-use crate::print::fraction_fmt::fmt_align_fraction_strings;
+use crate::print::fraction_fmt::{fmt_align_fraction_strings, fmt_align_fraction_strings_vec};
 use crate::parse::unit::Unit;
+use crossterm::style::{SetAttribute, Attribute, Print, SetForegroundColor, Color, ResetColor};
+use crossterm::ExecutableCommand;
+use std::io::stdout;
+use crossterm::tty::IsTty;
 
 mod fraction_fmt;
 
@@ -119,12 +121,12 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
         value_alignment: ValueAlignment::Right,
         interpretations: vec![
             OutputLine {
-                key: " f32".to_string(),
+                key: "f32".to_string(),
                 // value: format!("'{}'", f32_fmt),
                 value: f32_fmt,
             },
             OutputLine {
-                key: " f64".to_string(),
+                key: "f64".to_string(),
                 // value: format!("'{}'", f64_fmt),
                 value: f64_fmt,
             },
@@ -134,25 +136,36 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
 
 fn build_bytes(parsed: &Parsed) -> OutputGroup {
     let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
+    let fmt_vec = vec![
+        format!("{}", base_value_f64),
+        format!("{}", Unit::base_to_target(Unit::Kilo, base_value_f64)),
+        format!("{}", Unit::base_to_target(Unit::Mega, base_value_f64)),
+        format!("{}", Unit::base_to_target(Unit::Giga, base_value_f64)),
+    ];
+    let fmt_vec = fmt_align_fraction_strings_vec(
+        fmt_vec.iter()
+            .map(|x| x.as_str())
+            .collect()
+    );
     OutputGroup {
         title: Interpretation::Bytes,
         value_alignment: ValueAlignment::Right,
         interpretations: vec![
             OutputLine {
                 key: " B".to_string(),
-                value: format!("{}", base_value_f64),
+                value: fmt_vec[0].as_str().to_string(),
             },
             OutputLine {
-                key: " KB".to_string(),
-                value: format!("{}", Unit::base_to_target(Unit::Kilo, base_value_f64)),
+                key: "KB".to_string(),
+                value: fmt_vec[1].as_str().to_string(),
             },
             OutputLine {
-                key: " MB".to_string(),
-                value: format!("{}", Unit::base_to_target(Unit::Mega, base_value_f64)),
+                key: "MB".to_string(),
+                value: fmt_vec[2].as_str().to_string(),
             },
             OutputLine {
-                key: " GB".to_string(),
-                value: format!("{}", Unit::base_to_target(Unit::Giga, base_value_f64)),
+                key: "GB".to_string(),
+                value: fmt_vec[3].as_str().to_string(),
             },
         ]
     }
@@ -160,25 +173,36 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
 
 fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
     let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
+    let fmt_vec = vec![
+        format!("{}", base_value_f64),
+        format!("{}", Unit::base_to_target(Unit::Kibi, base_value_f64)),
+        format!("{}", Unit::base_to_target(Unit::Mibi, base_value_f64)),
+        format!("{}", Unit::base_to_target(Unit::Gibi, base_value_f64)),
+    ];
+    let fmt_vec = fmt_align_fraction_strings_vec(
+        fmt_vec.iter()
+            .map(|x| x.as_str())
+            .collect()
+    );
     OutputGroup {
         title: Interpretation::Ibibytes,
         value_alignment: ValueAlignment::Right,
         interpretations: vec![
             OutputLine {
                 key: " Bi".to_string(),
-                value: format!("{}", base_value_f64),
+                value: format!("{}", &fmt_vec[0]),
             },
             OutputLine {
-                key: " KiB".to_string(),
-                value: format!("{}", Unit::base_to_target(Unit::Kibi, base_value_f64)),
+                key: "KiB".to_string(),
+                value: format!("{}", &fmt_vec[1]),
             },
             OutputLine {
-                key: " MiB".to_string(),
-                value: format!("{}", Unit::base_to_target(Unit::Mibi, base_value_f64)),
+                key: "MiB".to_string(),
+                value: format!("{}", &fmt_vec[2]),
             },
             OutputLine {
-                key: " GiB".to_string(),
-                value: format!("{}", Unit::base_to_target(Unit::Gibi, base_value_f64)),
+                key: "GiB".to_string(),
+                value: format!("{}", &fmt_vec[3]),
             },
         ]
     }
@@ -250,39 +274,78 @@ impl OutputGroup {
 
     pub fn pretty_print(&self) {
         // print heading
-        let fmt = format!("### Interpreted as: {} ###", self.title)
-            .to_uppercase();
-        println!("{}", fmt);
+        self.print_heading();
 
         let longest_key = self.find_longest_key_string();
         let longest_value = self.find_longest_value_string();
 
-        // align like this:
-        // 123
-        // 1
-        // 1234
-        if self.value_alignment == ValueAlignment::Left {
-            for i in &self.interpretations {
-                let spaces = longest_key - i.key.len();
-                print!("{}:  ", i.key);
-                for _ in 0..spaces { print!(" ") }
-                print!("{}", i.value);
-                println!(); //print \n
-            }
+        for i in &self.interpretations {
+            let additional_left_spaces = if self.value_alignment == ValueAlignment::Left {
+                longest_key - i.key.len()
+            } else {
+                longest_key - i.key.len() + longest_value - i.value.len()
+            };
+
+            // print key in color
+            self.print_key(i.key());
+            // print!("{}:  ", i.key);
+            for _ in 0..additional_left_spaces { print!(" ") }
+            // print value in color
+            self.print_value(i.value());
+            println!(); //print \n
         }
-        // align like this:
-        //  123
-        //    1
-        // 1234
-        else {
-            for i in &self.interpretations {
-                let spaces = longest_key - i.key.len()
-                    + longest_value - i.value.len();
-                print!("{}:  ", i.key);
-                for _ in 0..spaces { print!(" ") }
-                print!("{}", i.value);
-                println!(); //print \n
-            }
+    }
+
+    /// Prints the heading with the leading newline.
+    fn print_heading(&self) {
+        // in "IntelliJ/Clion > run" this is false
+        let is_tty = stdout().is_tty();
+        let fmt = format!("### Interpreted as: {} ###", self.title).to_uppercase();
+        if is_tty {
+            stdout()
+                .execute(SetAttribute(Attribute::Bold)).unwrap()
+                .execute(SetForegroundColor(Color::Blue)).unwrap()
+                .execute(Print(fmt)).unwrap()
+                .execute(ResetColor).unwrap()
+                .execute(SetAttribute(Attribute::Reset)).unwrap();
+        } else {
+            print!("{}", fmt)
+        }
+        println!(); // newline
+    }
+
+    /// Prints the key without newline at the end.
+    fn print_key(&self, key: &str) {
+        // in "IntelliJ/Clion > run" this is false
+        let is_tty = stdout().is_tty();
+        let key_fmt = format!("{}:  ", key);
+        if is_tty {
+            stdout()
+                .execute(SetAttribute(Attribute::Bold)).unwrap()
+                .execute(SetForegroundColor(Color::Red)).unwrap()
+                .execute(Print(key_fmt)).unwrap()
+                .execute(ResetColor).unwrap()
+                .execute(SetAttribute(Attribute::Reset)).unwrap();
+        } else {
+            print!("{}", key_fmt);
+        }
+    }
+
+
+    /// Prints the value without newline at the end.
+    fn print_value(&self, value: &str) {
+        // in "IntelliJ/Clion > run" this is false
+        let is_tty = stdout().is_tty();
+        let value_fmt = format!("{}", value);
+        if is_tty {
+            stdout()
+                // .execute(SetAttribute(Attribute::Bold)).unwrap()
+                .execute(SetForegroundColor(Color::Green)).unwrap()
+                .execute(Print(value_fmt)).unwrap()
+                .execute(ResetColor).unwrap();
+                // .execute(SetAttribute(Attribute::Reset)).unwrap();
+        } else {
+            print!("{}", value_fmt);
         }
     }
 }

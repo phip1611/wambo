@@ -1,5 +1,4 @@
 use regex::Regex;
-use std::hash::Hash;
 
 /// The parts from an formatted fractional number string.
 /// Can represent e.g. "1", "3.14", or "-14.141"
@@ -116,6 +115,31 @@ pub fn fmt_align_fraction_strings(fraction1: &str, fraction2: &str) -> (String, 
     (first, second)
 }
 
+/// Applies [`fmt_align_fraction_strings`] to all elements in the vector. To align
+/// multiple values.
+pub fn fmt_align_fraction_strings_vec(fraction_strings: Vec<&str>) -> Vec<String> {
+
+    // TODO this is not really accurate because my formatting algorithm should
+    // take into account that there are more than two strings at a time. :(
+
+    // I use windows:
+    //   first and second
+    //   second and third
+    //   third and fourth
+    let mut new_vec = vec![];
+    fraction_strings.iter().as_slice().windows(2).enumerate().for_each(|(index, w)| {
+        let is_last_iteration = index == fraction_strings.len() - 1 - 1;
+        // println!("w1:{}, w2:{}", w[0], w[1])
+        let (first, second) = fmt_align_fraction_strings(w[0], w[1]);
+
+        new_vec.push(first);
+        if is_last_iteration {
+            new_vec.push(second);
+        }
+    });
+    new_vec
+}
+
 /// Takes the fractional part, removes all zeroes and afterwards returns
 /// the new fractional part string. If after the removing of the zeroes
 /// only "" is left, than None get's returned.
@@ -196,8 +220,16 @@ mod tests {
 
     #[test]
     fn test_fmt_align_fraction_strings() {
-        assert_eq!(("2".to_owned(), " 2.5".to_owned()), fmt_align_fraction_strings("2", "2.5"));
-        assert_eq!(("2.123".to_owned(), "2.13".to_owned()), fmt_align_fraction_strings("2.123", "2.12"));
+        // function only adds spaces on the right side
+        assert_eq!(("2  ".to_owned(), "2.5".to_owned()), fmt_align_fraction_strings("2", "2.5"));
+        assert_eq!(("2.123".to_owned(), "2.12 ".to_owned()), fmt_align_fraction_strings("2.123", "2.12"));
+        assert_eq!(("4194304  ".to_owned(), "4194.3".to_owned()), fmt_align_fraction_strings("4194304", "4194.30"));
+    }
+
+    #[test]
+    fn test_fmt_align_fraction_strings_vec() {
+        let vec = fmt_align_fraction_strings_vec(vec!["1213.1414", "14", "14145.1515100000", "241.0000"]);
+        println!("{:#?}", vec);
     }
 
 }
