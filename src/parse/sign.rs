@@ -25,7 +25,6 @@ SOFTWARE.
 //! Parsing code for the actual number/numeric value.
 
 use derive_more::Display;
-use crate::parse::ns::NumeralSystem;
 
 #[derive(Debug, PartialEq, Copy, Clone, Display)]
 pub enum Sign {

@@ -24,10 +24,19 @@ SOFTWARE.
 //! TODO
 
 mod parse;
+mod print;
 
 use std::process::exit;
 use crate::parse::parse_input;
-
+use std::io::{stdout, Write};
+use crossterm::{
+    execute,
+    style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
+    ExecutableCommand, Result,
+    event,
+};
+use crossterm::style::{SetAttribute, Attribute};
+use crate::print::build_output_groups;
 
 fn main() {
     let args = std::env::args().collect::<Vec<String>>();
@@ -42,85 +51,26 @@ fn main() {
         exit(0);
     }
 
-    let number = parse_input(input);
-    if let Err(e) = number {
+    let parsed = parse_input(input);
+    if let Err(e) = parsed {
         eprintln!("Illegal input: {}", e);
         exit(-1);
     }
-    let parsed = number.unwrap();
-    let number = parsed.value();
+    let parsed = parsed.unwrap();
 
-    let number_f64 = number as f64;
-    println!("### interpreting as: different numeral systems ###");
-    // even if IDE tells that sign() needs Display trait. It gets implemented
-    // during build time
-    println!("decimal:   {}{}", parsed.sign(), number);
-    println!("bin    : {}0b{:b}", parsed.sign(), number);
-    println!("octal  : {}0o{:o}", parsed.sign(), number);
-    println!("hex    : {}0x{:x}", parsed.sign(), number);
-    println!();
-
-    println!("### interpreting as: bits (u64) ###");
-    // even if IDE tells that sign() needs Display trait. It gets implemented
-    // during build time
-    println!("bin (Rust-style): {}", format_bin_rust_style(number));
-    println!("bin (C-style)   : 0b{:064b}", number);
-    println!("hex (Rust-style): {}", format_hex_rust_style(number));
-    println!("hex (C-style)   : 0x{:016x}", number);
-    println!();
-    println!("### interpreting as: several (un)signed data types (decimal) ###");
-    println!(" u8: {:>15}", number as u8);
-    println!(" i8: {:>15}", number as i8);
-    println!("u16: {:>15}", number as u16);
-    println!("i16: {:>15}", number as i16);
-    println!("i32: {:>15}", number as i32);
-    println!("u64: {:>15}", number as u64);
-    println!("i64: {:>15}", number as i64);
-    println!("f32: {:>23.7} (IEEE-754)", f32::from_ne_bytes((number as i32).to_ne_bytes()));
-    println!("f64: {:>23.7} (IEEE-754)", f64::from_ne_bytes(number.to_ne_bytes()));
-    println!();
-    println!("### interpreting as: bytes/size ###");
-    println!(" B     : {:>13}", number);
-    println!("KB     : {:>21.7}", number_f64 / 1E3);
-    println!("MB     : {:>21.7}", number_f64 / 1E6);
-    println!("GB     : {:>21.7}", number_f64 / 1E9);
-    println!();
-    // TODO is base the right word?!
-    println!("### interpreting as: *ibi-bytes (1024 (=multiple of 2) as base instead of 1000) ###");
-    println!("KiB    : {:>21.7}", number_f64 / 1024_f64);
-    println!("MiB    : {:>21.7}", number_f64 / 1024_f64.powf(2_f64));
-    println!("GiB    : {:>21.7}", number_f64 / 1024_f64.powf(3_f64));
+    let ogs = build_output_groups(parsed);
+    for og in ogs {
+        og.pretty_print();
+        println!(); // one line to separate the output groups
+    }
 }
 
 
 
 
-fn format_hex_rust_style(number: u64) -> String {
-    let string_fixed_len = format!("{:016x}", number);
-    let formatted = format_num_add_delimiters(&string_fixed_len, 4);
-    format!("0x{} (64bit)", formatted)
-}
 
-fn format_bin_rust_style(number: u64) -> String {
-    let string_fixed_len = format!("{:064b}", number);
-    let formatted = format_num_add_delimiters(&string_fixed_len, 8);
-    format!("0b{} (64bit)", formatted)
-}
 
-fn format_num_add_delimiters(digits: &str, chunksize: usize) -> String {
-    let chars = digits.chars().collect::<Vec<char>>();
-    assert_eq!(chars.len() % chunksize, 0);
-    let formatted_with_delimiters = chars.chunks(chunksize)
-        .map(|chars| chars.iter().collect::<String>())
-        .fold(String::new(), |combined: String, group|
-            format!("{}_{}", combined, group),
-    );
 
-    // transform _00000000_00000000 to 00000000_00000000 (remove leading underscore)
-    formatted_with_delimiters.chars().into_iter()
-        .skip(1) // skip first item
-        .collect::<String>()
-}
 
 fn show_help() {
     println!("Wambo - Decimal, Hex, Bin number + byte converter");
