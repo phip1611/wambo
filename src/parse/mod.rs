@@ -142,7 +142,8 @@ impl Parsed {
     }
 
     /// Getter for `value`. The actual number
-    /// as unsigned u64 in base unit.
+    /// as unsigned u64 in base unit. So if you input
+    ///  `15KB` then this will be `15.000`.
     pub fn value(&self) -> u64 {
         self.value
     }
@@ -190,7 +191,7 @@ mod tests {
     fn test_parse_input() {
         let parsed = parse_input("-0xFMib").unwrap();
         assert_eq!(Sign::Negative, parsed.sign());
-        assert_eq!(15, parsed.value());
+        assert_eq!(15 * 1024 * 1024, parsed.value());
         assert_eq!(NumeralSystem::Hex, parsed.numeral_system());
         assert_eq!(Unit::Mibi, parsed.unit());
     }
@@ -198,7 +199,7 @@ mod tests {
     #[test]
     fn test_regex() {
         let regex = Regex::new(INPUT_REGEX).unwrap();
-        let captures = regex.captures("-0x123ki").unwrap();
+        let _captures = regex.captures("-0x123ki").unwrap();
     }
 
     #[test]
