@@ -65,9 +65,9 @@ dependencies = [
 
 [[package]]
 name = "fraction_list_fmt_align"
-version = "0.2.0"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2cdb4732aa470a3a26d5266cb0a6c3751f29915e2e69f296fd3b2c042ffefc39"
+checksum = "b9b522d860b18adcf83cfc711ac396c2a45e6317fafb1dd7b1d6b12d29f8b9db"
 
 [[package]]
 name = "instant"
@@ -285,7 +285,7 @@ checksum = "f7fe0bb3479651439c9112f72b6c505038574c9fbb575ed1bf3b797fa39dd564"
 
 [[package]]
 name = "wambo"
-version = "0.2.5"
+version = "0.2.6"
 dependencies = [
  "crossterm",
  "derive_more",

@@ -137,8 +137,7 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
 }
 
 fn build_bytes(parsed: &Parsed) -> OutputGroup {
-    let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
-
+    let base_value_f64 = parsed.value() as f64;
     let fmt_vec = fmt_align_fractions(
         &[
             FractionNumber::F64(base_value_f64),
@@ -175,7 +174,7 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
 }
 
 fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
-    let base_value_f64 = parsed.unit().value_to_base_f64(parsed.value() as f64);
+    let base_value_f64 = parsed.value() as f64;
     let fmt_vec = fmt_align_fractions(
         &[
             FractionNumber::F64(base_value_f64),

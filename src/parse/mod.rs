@@ -105,12 +105,13 @@ impl Parsed {
         unit: Unit,
         sign: Sign,
     ) -> Self {
-        let value = match numeral_system {
+        let value_in_unit = match numeral_system {
             NumeralSystem::Bin => u64::from_str_radix(&value_str, 2).unwrap(),
             NumeralSystem::Octal => u64::from_str_radix(&value_str, 8).unwrap(),
             NumeralSystem::Decimal => value_str.parse::<u64>().unwrap(),
             NumeralSystem::Hex => u64::from_str_radix(&value_str, 16).unwrap(),
         };
+        let value = unit.value_to_base_u64(value_in_unit);
 
         Self {
             normalized_input,
@@ -141,7 +142,7 @@ impl Parsed {
     }
 
     /// Getter for `value`. The actual number
-    /// as unsigned u64 as base unit.
+    /// as unsigned u64 in base unit.
     pub fn value(&self) -> u64 {
         self.value
     }
@@ -154,6 +155,7 @@ impl Parsed {
     }
 
     /// Getter for `unit`.
+    #[allow(dead_code)]
     pub fn unit(&self) -> Unit {
         self.unit
     }
