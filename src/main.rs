@@ -53,9 +53,14 @@ fn main() {
     let parsed = parsed.unwrap();
 
     let ogs = build_output_groups(parsed);
-    for og in ogs {
+    for (index, og) in ogs.iter().enumerate() {
         og.pretty_print();
-        println!(); // one line to separate the output groups
+
+        // print new line for all except the last item
+        if index < ogs.len() - 1 {
+            // one line to separate the output groups
+            println!();
+        }
     }
 }
 
