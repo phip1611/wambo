@@ -37,12 +37,16 @@ pub enum Unit {
     Mega,
     #[display(fmt = "Gigabyte")]
     Giga,
+    #[display(fmt = "Terabyte")]
+    Tera,
     #[display(fmt = "Kibibyte")]
     Kibi,
     #[display(fmt = "Mibibyte")]
     Mibi,
     #[display(fmt = "Gibibyte")]
     Gibi,
+    #[display(fmt = "Tebibyte")]
+    Tebi,
 }
 
 impl Unit {
@@ -56,9 +60,11 @@ impl Unit {
             "k" | "kb" => Unit::Kilo,
             "m" | "mb" => Unit::Mega,
             "g" | "gb" => Unit::Giga,
+            "t" | "tb" => Unit::Tera,
             "ki" | "kib" => Unit::Kibi,
             "mi" | "mib" => Unit::Mibi,
             "gi" | "gib" => Unit::Gibi,
+            "ti" | "tib" => Unit::Tebi,
             _ => return Err(ParseError::InvalidUnit(part_str.to_owned())),
         };
         Ok(x)
@@ -71,9 +77,11 @@ impl Unit {
             Unit::Kilo => value / 1E3_f64,
             Unit::Mega => value / 1E6_f64,
             Unit::Giga => value / 1E9_f64,
+            Unit::Tera => value / 1E12_f64,
             Unit::Kibi => value / 1024_f64,
             Unit::Mibi => value / 1024_f64.powf(2_f64),
             Unit::Gibi => value / 1024_f64.powf(3_f64),
+            Unit::Tebi => value / 1024_f64.powf(4_f64),
         }
     }
 
@@ -97,9 +105,11 @@ impl Unit {
             Unit::Kilo => value * 1E3 as u64,
             Unit::Mega => value * 1E6 as u64,
             Unit::Giga => value * 1E9 as u64,
+            Unit::Tera => value * 1E12 as u64,
             Unit::Kibi => value * 1024_u64,
             Unit::Mibi => value * 1024_u64.pow(2),
             Unit::Gibi => value * 1024_u64.pow(3),
+            Unit::Tebi => value * 1024_u64.pow(4),
         }
     }
 }
@@ -142,6 +152,11 @@ mod tests {
             Unit::Giga,
             Unit::from_input("gb").unwrap(),
             "Must be Unit::Giga"
+        );
+        assert_eq!(
+            Unit::Tera,
+            Unit::from_input("tb").unwrap(),
+            "Must be Unit::Tera"
         );
         assert!(Unit::from_input("afaf").is_err());
     }
