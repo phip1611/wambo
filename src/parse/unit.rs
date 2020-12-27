@@ -50,7 +50,7 @@ pub enum Unit {
 }
 
 impl Unit {
-    /// Parses the [`NumeralSystem`] from the normalized and validated slice of the input
+    /// Parses the [`super::ns::NumeralSystem`] from the normalized and validated slice of the input
     /// that corresponds to this type.
     /// * `part_str` slice of normalized and validated user input that corresponds to this type
     pub fn from_input(part_str: &str) -> Result<Unit, ParseError> {

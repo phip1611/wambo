@@ -35,7 +35,7 @@ pub enum Sign {
 }
 
 impl Sign {
-    /// Parses the [`NumeralSystem`] from the normalized and validated slice of the input
+    /// Parses the [`super::ns::NumeralSystem`] from the normalized and validated slice of the input
     /// that corresponds to this type.
     /// * `part_str` slice of normalized and validated user input that corresponds to this type
     pub fn from_input(normalized_input: &str) -> Sign {

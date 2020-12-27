@@ -21,7 +21,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-//! TODO
+
+//! **Wambo** is a binary and so far no library.
+//! It's an all-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64,
+//! and f32/f64.
 
 mod parse;
 mod print;
@@ -30,6 +33,9 @@ use crate::parse::parse_input;
 use crate::print::build_output_groups;
 use std::process::exit;
 
+/// **Wambo** is a binary and so far no library.
+/// It's an all-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64,
+/// and f32/f64.
 fn main() {
     let args = std::env::args().collect::<Vec<String>>();
     if args.len() == 1 {
