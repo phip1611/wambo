@@ -144,6 +144,7 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
             FractionNumber::F64(Unit::base_to_target(Unit::Kilo, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Mega, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Giga, base_value_f64)),
+            FractionNumber::F64(Unit::base_to_target(Unit::Tera, base_value_f64)),            
         ],
         MAX_PRECISION,
     );
@@ -169,6 +170,10 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
                 key: "GB".to_string(),
                 value: fmt_vec[3].to_string(),
             },
+            OutputLine {
+                key: "TB".to_string(),
+                value: fmt_vec[4].to_string(),
+            },
         ],
     }
 }
@@ -181,6 +186,7 @@ fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
             FractionNumber::F64(Unit::base_to_target(Unit::Kibi, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Mibi, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Gibi, base_value_f64)),
+            FractionNumber::F64(Unit::base_to_target(Unit::Tebi, base_value_f64)),
         ],
         MAX_PRECISION,
     );
@@ -204,6 +210,10 @@ fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
             OutputLine {
                 key: "GiB".to_string(),
                 value: fmt_vec[3].to_string(),
+            },
+            OutputLine {
+                key: "TiB".to_string(),
+                value: fmt_vec[4].to_string(),
             },
         ],
     }

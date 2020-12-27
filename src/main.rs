@@ -87,6 +87,6 @@ fn show_help() {
     println!();
     println!("  Input values can have a unit.");
     println!("    $ wambo 1mib (Mibibyte)");
-    println!("    Valid units are: k/kb, m/mb, g/gb");
-    println!("                     ki/kib, mi/mib, gi/gib");
+    println!("    Valid units are: k/kb, m/mb, g/gb, t/tb");
+    println!("                     ki/kib, mi/mib, gi/gib, ti/tib");
 }
