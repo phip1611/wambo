@@ -188,12 +188,21 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_input() {
+    fn test_parse_input_1() {
         let parsed = parse_input("-0xFMib").unwrap();
         assert_eq!(Sign::Negative, parsed.sign());
         assert_eq!(15 * 1024 * 1024, parsed.value());
         assert_eq!(NumeralSystem::Hex, parsed.numeral_system());
         assert_eq!(Unit::Mibi, parsed.unit());
+    }
+
+    #[test]
+    fn test_parse_input_2() {
+        let parsed = parse_input("-7").unwrap();
+        assert_eq!(Sign::Negative, parsed.sign());
+        assert_eq!(7, parsed.value());
+        assert_eq!(NumeralSystem::Decimal, parsed.numeral_system());
+        assert_eq!(Unit::Base, parsed.unit());
     }
 
     #[test]

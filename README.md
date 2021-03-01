@@ -5,6 +5,8 @@ numeral systems (bin, hex, dec) + interprets the input as both signed
 and unsigned values (from i8 to i64, including f32 and f64). It also
 easily calculates you mibibytes to bytes, kilobytes to gibibytes and so on.
 
+**Wambo can be found on the web too: [wambo-web.de](wambo-web.de)**
+
 ### Usage
 **Install:** `$ cargo install wambo`
 ##### Examples

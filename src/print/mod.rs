@@ -27,19 +27,19 @@ fn build_numeral_systems_og(parsed: &Parsed) -> OutputGroup {
         interpretations: vec![
             OutputLine {
                 key: "Decimal".to_string(),
-                value: format!("{}", parsed.value()),
+                value: format!("{}{}", parsed.sign(), parsed.value()),
             },
             OutputLine {
                 key: "Binary".to_string(),
-                value: format!("{:b}", parsed.value()),
+                value: format!("{}{:b}", parsed.sign(), parsed.value()),
             },
             OutputLine {
                 key: "Octal".to_string(),
-                value: format!("{:o}", parsed.value()),
+                value: format!("{}{:o}", parsed.sign(), parsed.value()),
             },
             OutputLine {
                 key: "Hexadecimal".to_string(),
-                value: format!("{:x}", parsed.value()),
+                value: format!("{}{:x}", parsed.sign(), parsed.value()),
             },
         ],
     }
@@ -73,7 +73,7 @@ fn build_un_and_signed_integers_og(parsed: &Parsed) -> OutputGroup {
         interpretations: vec![
             OutputLine {
                 key: " i8".to_string(),
-                value: format!("{}", parsed.value() as i8),
+                value: format!("{}{}", parsed.sign(), parsed.value() as i8),
             },
             OutputLine {
                 key: " u8".to_string(),
@@ -81,7 +81,7 @@ fn build_un_and_signed_integers_og(parsed: &Parsed) -> OutputGroup {
             },
             OutputLine {
                 key: "i16".to_string(),
-                value: format!("{}", parsed.value() as i16),
+                value: format!("{}{}", parsed.sign(), parsed.value() as i16),
             },
             OutputLine {
                 key: "u16".to_string(),
@@ -89,7 +89,7 @@ fn build_un_and_signed_integers_og(parsed: &Parsed) -> OutputGroup {
             },
             OutputLine {
                 key: "i32".to_string(),
-                value: format!("{}", parsed.value() as i32),
+                value: format!("{}{}", parsed.sign(), parsed.value() as i32),
             },
             OutputLine {
                 key: "u32".to_string(),
@@ -97,7 +97,7 @@ fn build_un_and_signed_integers_og(parsed: &Parsed) -> OutputGroup {
             },
             OutputLine {
                 key: "i64".to_string(),
-                value: format!("{}", parsed.value() as i64),
+                value: format!("{}{}", parsed.sign(), parsed.value() as i64),
             },
             OutputLine {
                 key: "u64".to_string(),
