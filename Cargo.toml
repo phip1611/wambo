@@ -21,7 +21,8 @@ exclude = [
 
 [dependencies]
 crossterm = "0.25"
-derive_more = { version = "0.99.11", default-features = false, features = ["display"] }
+derive_more = { version = "0.99", default-features = false, features = ["display"] }
 fraction_list_fmt_align = "0.2"
-regex = "1.6.0"
+regex = "1.6"
+tui = "0.19" # uses crossterm as backend by default
 

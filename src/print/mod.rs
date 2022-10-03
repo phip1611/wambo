@@ -1,55 +1,52 @@
 use crate::parse::unit::Unit;
-use crate::parse::Parsed;
-use crossterm::style::{Attribute, Color, Print, ResetColor, SetAttribute, SetForegroundColor};
-use crossterm::tty::IsTty;
-use crossterm::ExecutableCommand;
+use crate::parse::{NumeralSystem, ParsedUserInput};
 use derive_more::Display;
 use fraction_list_fmt_align::{fmt_align_fractions, FractionNumber};
-use std::io::stdout;
 
-const MAX_PRECISION: u8 = 20;
+const MAX_PRECISION: u8 = 4;
 
-pub fn build_output_groups(parsed: Parsed) -> Vec<OutputGroup> {
-    vec![
-        build_numeral_systems_og(&parsed),
-        build_bits_og(&parsed),
-        build_un_and_signed_integers_og(&parsed),
-        build_ieee754_og(&parsed),
-        build_bytes(&parsed),
-        build_ibi_bytes(&parsed),
-    ]
+pub fn get_output_group(parsed: &ParsedUserInput, representation: Interpretation) -> OutputGroup {
+    match representation {
+        Interpretation::NumeralSystems => build_numeral_systems_og(parsed),
+        Interpretation::Bit64BigEndian => build_bits_og(parsed),
+        Interpretation::SignedIntegers => build_signed_integers_og(parsed),
+        Interpretation::UnsignedIntegers => build_unsigned_integers_og(parsed),
+        Interpretation::IEEE754 => build_ieee754_og(parsed),
+        Interpretation::Bytes => build_bytes_og(parsed),
+        Interpretation::Ibibytes => build_ibi_bytes_og(parsed),
+    }
 }
 
-fn build_numeral_systems_og(parsed: &Parsed) -> OutputGroup {
+fn build_numeral_systems_og(parsed: &ParsedUserInput) -> OutputGroup {
     OutputGroup {
         title: Interpretation::NumeralSystems,
-        value_alignment: ValueAlignment::Left,
-        interpretations: vec![
+        value_alignment: ValueAlignment::Right,
+        lines: vec![
             OutputLine {
-                key: "Decimal".to_string(),
+                key: format!("{}", NumeralSystem::Decimal),
                 value: format!("{}{}", parsed.sign(), parsed.value()),
             },
             OutputLine {
-                key: "Binary".to_string(),
+                key: format!("{}", NumeralSystem::Bin),
                 value: format!("{}{:b}", parsed.sign(), parsed.value()),
             },
             OutputLine {
-                key: "Octal".to_string(),
+                key: format!("{}", NumeralSystem::Octal),
                 value: format!("{}{:o}", parsed.sign(), parsed.value()),
             },
             OutputLine {
-                key: "Hexadecimal".to_string(),
+                key: format!("{}", NumeralSystem::Hex),
                 value: format!("{}{:x}", parsed.sign(), parsed.value()),
             },
         ],
     }
 }
 
-fn build_bits_og(parsed: &Parsed) -> OutputGroup {
+fn build_bits_og(parsed: &ParsedUserInput) -> OutputGroup {
     OutputGroup {
         title: Interpretation::Bit64BigEndian,
         value_alignment: ValueAlignment::Left,
-        interpretations: vec![
+        lines: vec![
             OutputLine {
                 key: "Bin (Rust-style)".to_string(),
                 value: format!("0b{}", format_64bit_bin_rust_style(parsed.value())),
@@ -66,38 +63,47 @@ fn build_bits_og(parsed: &Parsed) -> OutputGroup {
     }
 }
 
-fn build_un_and_signed_integers_og(parsed: &Parsed) -> OutputGroup {
+fn build_signed_integers_og(parsed: &ParsedUserInput) -> OutputGroup {
     OutputGroup {
-        title: Interpretation::UnAndSignedIntegers,
+        title: Interpretation::SignedIntegers,
         value_alignment: ValueAlignment::Right,
-        interpretations: vec![
+        lines: vec![
             OutputLine {
                 key: " i8".to_string(),
                 value: format!("{}{}", parsed.sign(), parsed.value() as i8),
-            },
-            OutputLine {
-                key: " u8".to_string(),
-                value: format!("{}", parsed.value() as u8),
             },
             OutputLine {
                 key: "i16".to_string(),
                 value: format!("{}{}", parsed.sign(), parsed.value() as i16),
             },
             OutputLine {
-                key: "u16".to_string(),
-                value: format!("{}", parsed.value() as u16),
-            },
-            OutputLine {
                 key: "i32".to_string(),
                 value: format!("{}{}", parsed.sign(), parsed.value() as i32),
             },
             OutputLine {
-                key: "u32".to_string(),
-                value: format!("{}", parsed.value() as u32),
-            },
-            OutputLine {
                 key: "i64".to_string(),
                 value: format!("{}{}", parsed.sign(), parsed.value() as i64),
+            },
+        ],
+    }
+}
+
+fn build_unsigned_integers_og(parsed: &ParsedUserInput) -> OutputGroup {
+    OutputGroup {
+        title: Interpretation::UnsignedIntegers,
+        value_alignment: ValueAlignment::Right,
+        lines: vec![
+            OutputLine {
+                key: " u8".to_string(),
+                value: format!("{}", parsed.value() as u8),
+            },
+            OutputLine {
+                key: "u16".to_string(),
+                value: format!("{}", parsed.value() as u16),
+            },
+            OutputLine {
+                key: "u32".to_string(),
+                value: format!("{}", parsed.value() as u32),
             },
             OutputLine {
                 key: "u64".to_string(),
@@ -107,7 +113,7 @@ fn build_un_and_signed_integers_og(parsed: &Parsed) -> OutputGroup {
     }
 }
 
-fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
+fn build_ieee754_og(parsed: &ParsedUserInput) -> OutputGroup {
     // maximum 15 digits fractional precision
     // also rounds the number at the 15'th place/digit
     let f32_num = f32::from_ne_bytes((parsed.value() as i32).to_ne_bytes());
@@ -121,7 +127,7 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
         // not important here if left or right because the formatting
         // utility already makes sure that all values are same length (via spaces)
         value_alignment: ValueAlignment::Left,
-        interpretations: vec![
+        lines: vec![
             OutputLine {
                 key: "f32".to_string(),
                 // value: format!("'{}'", f32_fmt),
@@ -136,7 +142,7 @@ fn build_ieee754_og(parsed: &Parsed) -> OutputGroup {
     }
 }
 
-fn build_bytes(parsed: &Parsed) -> OutputGroup {
+fn build_bytes_og(parsed: &ParsedUserInput) -> OutputGroup {
     let base_value_f64 = parsed.value() as f64;
     let fmt_vec = fmt_align_fractions(
         &[
@@ -153,7 +159,7 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
         // not important here if left or right because the formatting
         // utility already makes sure that all values are same length (via spaces)
         value_alignment: ValueAlignment::Left,
-        interpretations: vec![
+        lines: vec![
             OutputLine {
                 key: " B".to_string(),
                 value: fmt_vec[0].to_string(),
@@ -178,7 +184,7 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
     }
 }
 
-fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
+fn build_ibi_bytes_og(parsed: &ParsedUserInput) -> OutputGroup {
     let base_value_f64 = parsed.value() as f64;
     let fmt_vec = fmt_align_fractions(
         &[
@@ -194,7 +200,7 @@ fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
         title: Interpretation::Ibibytes,
         // because they are already aligned Left and not right
         value_alignment: ValueAlignment::Left,
-        interpretations: vec![
+        lines: vec![
             OutputLine {
                 key: " iB".to_string(),
                 value: fmt_vec[0].to_string(),
@@ -223,23 +229,25 @@ fn build_ibi_bytes(parsed: &Parsed) -> OutputGroup {
 /// a specific class of interpretations.
 #[derive(Debug, Display, Copy, Clone)]
 pub enum Interpretation {
-    #[display(fmt = "Different numeral systems.")]
+    #[display(fmt = "Numeral Systems")]
     NumeralSystems,
-    #[display(fmt = "64bit in memory (big endian byte representation).")]
+    #[display(fmt = "64 bit (Big Endian)")]
     Bit64BigEndian,
-    #[display(fmt = "Several signed and unsigned integers (decimal).")]
-    UnAndSignedIntegers,
-    #[display(fmt = "Integer bits as IEEE754 (floating point numbers/fractions).")]
+    #[display(fmt = "Signed Integers")]
+    SignedIntegers,
+    #[display(fmt = "Unsigned Integers")]
+    UnsignedIntegers,
+    #[display(fmt = "Integer Bits as IEEE-754")]
     IEEE754,
-    #[display(fmt = "File size in bytes (factor 1000) (using f64).")]
+    #[display(fmt = "Size in Bytes")]
     Bytes,
-    #[display(fmt = "File size in *ibibytes (factor 1024) (using f64).")]
+    #[display(fmt = "Size in *ebi/*ibi Bytes")]
     Ibibytes,
 }
 
 /// Alignment of the value against the other values
 /// of the same group.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 enum ValueAlignment {
     /// align like this:
     /// ```ignore
@@ -257,133 +265,84 @@ enum ValueAlignment {
     Right,
 }
 
-#[derive(Debug)]
+/// An output group describes all information to ASCII-print multiple
+/// values of a certain representation on a line-by-line base. It has
+/// all information so that multiple lines can be aligned.
+#[derive(Clone, Debug)]
 pub struct OutputGroup {
     title: Interpretation,
-    interpretations: Vec<OutputLine>,
+    lines: Vec<OutputLine>,
     value_alignment: ValueAlignment,
 }
 
 impl OutputGroup {
-    pub fn find_longest_value_string(&self) -> usize {
-        self.interpretations
-            .iter()
-            .map(|i| i.value().len())
-            .max()
-            .unwrap()
+    fn find_longest_value_string(&self) -> usize {
+        self.lines.iter().map(|i| i.value().len()).max().unwrap()
     }
 
-    pub fn find_longest_key_string(&self) -> usize {
-        self.interpretations
-            .iter()
-            .map(|i| i.key().len())
-            .max()
-            .unwrap()
+    fn find_longest_key_string(&self) -> usize {
+        self.lines.iter().map(|i| i.key().len()).max().unwrap()
     }
 
-    #[allow(dead_code)]
     pub const fn title(&self) -> Interpretation {
         self.title
     }
 
-    #[allow(dead_code)]
-    pub const fn interpretations(&self) -> &Vec<OutputLine> {
-        &self.interpretations
+    pub fn iter(&self) -> OutputGroupIterator<'_> {
+        OutputGroupIterator::new(self)
     }
+}
 
-    pub fn pretty_print(&self) {
-        // print heading
-        self.print_heading();
+/// Iterator over the lines of an [`OutputGroup`].
+/// Returns pairs of `(key: String, value: String)` but
+/// each value is padded with enough spaces for a proper alignment.
+/// There is no space between the key and the value. It is up to
+/// API users to add `": "` or similar after each key.
+pub struct OutputGroupIterator<'a> {
+    og: &'a OutputGroup,
+    line: usize,
+}
 
-        let longest_key = self.find_longest_key_string();
-        let longest_value = self.find_longest_value_string();
+impl<'a> OutputGroupIterator<'a> {
+    fn new(og: &'a OutputGroup) -> Self {
+        OutputGroupIterator { og, line: 0 }
+    }
+}
 
-        for i in &self.interpretations {
-            let additional_left_spaces = if self.value_alignment == ValueAlignment::Left {
-                longest_key - i.key.len()
+impl<'a> Iterator for OutputGroupIterator<'a> {
+    type Item = (String, String);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.line >= self.og.lines.len() {
+            None
+        } else {
+            let longest_key = self.og.find_longest_key_string();
+            let longest_value = self.og.find_longest_value_string();
+
+            let line = &self.og.lines[self.line];
+
+            // additional spaces between key and value
+            let additional_spaces = if self.og.value_alignment == ValueAlignment::Left {
+                longest_key - line.key.len()
             } else {
-                longest_key - i.key.len() + longest_value - i.value.len()
+                longest_key - line.key.len() + longest_value - line.value.len()
             };
 
-            // print key in color
-            self.print_key(i.key());
-            // print!("{}:  ", i.key);
-            for _ in 0..additional_left_spaces {
-                print!(" ")
-            }
-            // print value in color
-            self.print_value(i.value());
-            println!(); //print \n
-        }
-    }
+            let value = format!(
+                "{additional_spaces}{value}",
+                additional_spaces = " ".repeat(additional_spaces),
+                value = line.value,
+            );
 
-    /// Prints the heading with the leading newline.
-    fn print_heading(&self) {
-        // in "IntelliJ/Clion > run" this is false
-        let is_tty = stdout().is_tty();
-        let fmt = format!("### Interpreted as: {} ###", self.title).to_uppercase();
-        if is_tty {
-            stdout()
-                .execute(SetAttribute(Attribute::Bold))
-                .unwrap()
-                .execute(SetForegroundColor(Color::Blue))
-                .unwrap()
-                .execute(Print(fmt))
-                .unwrap()
-                .execute(ResetColor)
-                .unwrap()
-                .execute(SetAttribute(Attribute::Reset))
-                .unwrap();
-        } else {
-            print!("{}", fmt)
-        }
-        println!(); // newline
-    }
+            self.line += 1;
 
-    /// Prints the key without newline at the end.
-    fn print_key(&self, key: &str) {
-        // in "IntelliJ/Clion > run" this is false
-        let is_tty = stdout().is_tty();
-        let key_fmt = format!("{}:  ", key);
-        if is_tty {
-            stdout()
-                .execute(SetAttribute(Attribute::Bold))
-                .unwrap()
-                .execute(SetForegroundColor(Color::Red))
-                .unwrap()
-                .execute(Print(key_fmt))
-                .unwrap()
-                .execute(ResetColor)
-                .unwrap()
-                .execute(SetAttribute(Attribute::Reset))
-                .unwrap();
-        } else {
-            print!("{}", key_fmt);
-        }
-    }
-
-    /// Prints the value without newline at the end.
-    fn print_value(&self, value: &str) {
-        // in "IntelliJ/Clion > run" this is false
-        let is_tty = stdout().is_tty();
-        let value_fmt = value.to_string();
-        if is_tty {
-            stdout()
-                // .execute(SetAttribute(Attribute::Bold)).unwrap()
-                .execute(SetForegroundColor(Color::Green))
-                .unwrap()
-                .execute(Print(value_fmt))
-                .unwrap()
-                .execute(ResetColor)
-                .unwrap();
-            // .execute(SetAttribute(Attribute::Reset)).unwrap();
-        } else {
-            print!("{}", value_fmt);
+            Some((line.key.clone(), value))
         }
     }
 }
 
-#[derive(Debug)]
+/// Bundles the key and the value for a line inside a [`OutputGroup`].
+#[derive(Clone, Debug)]
 pub struct OutputLine {
     key: String,
     value: String,
@@ -423,4 +382,69 @@ fn format_num_add_delimiters(digits: &str, chunksize: usize) -> String {
         .into_iter()
         .skip(1) // skip first item
         .collect::<String>()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn fold_og_iter_to_string(iter: OutputGroupIterator) -> String {
+        iter.fold(String::new(), |mut base, (key, value)| {
+            base.push_str(key.as_str());
+            base.push_str(value.as_str());
+            base.push('\n');
+            base
+        })
+    }
+
+    fn get_output_base_group() -> OutputGroup {
+        OutputGroup {
+            title: Interpretation::NumeralSystems,
+            lines: vec![
+                OutputLine {
+                    key: "foo".to_string(),
+                    value: "foobar".to_string(),
+                },
+                OutputLine {
+                    key: "foo2".to_string(),
+                    value: "foobar2".to_string(),
+                },
+            ],
+            value_alignment: ValueAlignment::Left,
+        }
+    }
+
+    #[test]
+    fn test_output_group_iter_align_left() {
+        let mut og = get_output_base_group();
+        og.value_alignment = ValueAlignment::Left;
+
+        let final_str = fold_og_iter_to_string(og.iter());
+
+        // println!("{}", final_str);
+        assert_eq!(
+            // it is up to library users to add sth like ": " to the key
+            "foo foobar\n\
+             foo2foobar2\n\
+            ",
+            final_str
+        );
+    }
+
+    #[test]
+    fn test_output_group_iter_align_right() {
+        let mut og = get_output_base_group();
+        og.value_alignment = ValueAlignment::Right;
+
+        let final_str = fold_og_iter_to_string(og.iter());
+
+        // println!("{}", final_str);
+        assert_eq!(
+            // it is up to library users to add sth like ": " to the key
+            "foo  foobar\n\
+             foo2foobar2\n\
+            ",
+            final_str
+        );
+    }
 }
