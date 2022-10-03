@@ -26,6 +26,27 @@ SOFTWARE.
 //! It's an all-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64,
 //! and f32/f64.
 
+#![deny(
+    clippy::all,
+    clippy::cargo,
+    clippy::nursery,
+    // clippy::restriction,
+    // clippy::pedantic
+)]
+// now allow a few rules which are denied by the above statement
+// --> they are ridiculous and not necessary
+#![allow(
+    clippy::fallible_impl_from,
+    clippy::needless_doctest_main,
+    clippy::redundant_pub_crate,
+    clippy::suboptimal_flops
+)]
+// required because the produced code by `derive_more` doesn't follow this rule
+#![allow(clippy::use_self)]
+#![deny(missing_docs)]
+#![deny(missing_debug_implementations)]
+#![deny(rustdoc::all)]
+
 mod parse;
 mod print;
 

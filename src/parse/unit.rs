@@ -27,7 +27,7 @@ SOFTWARE.
 use crate::parse::error::ParseError;
 use derive_more::Display;
 
-#[derive(Debug, PartialEq, Copy, Clone, Display)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Display)]
 pub enum Unit {
     #[display(fmt = "(Base)")]
     Base,
@@ -53,18 +53,18 @@ impl Unit {
     /// Parses the [`super::ns::NumeralSystem`] from the normalized and validated slice of the input
     /// that corresponds to this type.
     /// * `part_str` slice of normalized and validated user input that corresponds to this type
-    pub fn from_input(part_str: &str) -> Result<Unit, ParseError> {
+    pub fn from_input(part_str: &str) -> Result<Self, ParseError> {
         let x = match part_str {
             // attention! must match our regex!
-            "" => Unit::Base,
-            "k" | "kb" => Unit::Kilo,
-            "m" | "mb" => Unit::Mega,
-            "g" | "gb" => Unit::Giga,
-            "t" | "tb" => Unit::Tera,
-            "ki" | "kib" => Unit::Kibi,
-            "mi" | "mib" => Unit::Mibi,
-            "gi" | "gib" => Unit::Gibi,
-            "ti" | "tib" => Unit::Tebi,
+            "" => Self::Base,
+            "k" | "kb" => Self::Kilo,
+            "m" | "mb" => Self::Mega,
+            "g" | "gb" => Self::Giga,
+            "t" | "tb" => Self::Tera,
+            "ki" | "kib" => Self::Kibi,
+            "mi" | "mib" => Self::Mibi,
+            "gi" | "gib" => Self::Gibi,
+            "ti" | "tib" => Self::Tebi,
             _ => return Err(ParseError::InvalidUnit(part_str.to_owned())),
         };
         Ok(x)
@@ -73,15 +73,15 @@ impl Unit {
     /// Transforms a value in a specific value into the base unit.
     pub fn base_to_target(self, value: f64) -> f64 {
         match self {
-            Unit::Base => value,
-            Unit::Kilo => value / 1E3_f64,
-            Unit::Mega => value / 1E6_f64,
-            Unit::Giga => value / 1E9_f64,
-            Unit::Tera => value / 1E12_f64,
-            Unit::Kibi => value / 1024_f64,
-            Unit::Mibi => value / 1024_f64.powf(2_f64),
-            Unit::Gibi => value / 1024_f64.powf(3_f64),
-            Unit::Tebi => value / 1024_f64.powf(4_f64),
+            Self::Base => value,
+            Self::Kilo => value / 1E3_f64,
+            Self::Mega => value / 1E6_f64,
+            Self::Giga => value / 1E9_f64,
+            Self::Tera => value / 1E12_f64,
+            Self::Kibi => value / 1024_f64,
+            Self::Mibi => value / 1024_f64.powf(2_f64),
+            Self::Gibi => value / 1024_f64.powf(3_f64),
+            Self::Tebi => value / 1024_f64.powf(4_f64),
         }
     }
 
@@ -99,17 +99,17 @@ impl Unit {
 
     /// Converts the integer input to the base unit.
     /// This is fine as long as we don't support fractional input
-    pub fn value_to_base_u64(self, value: u64) -> u64 {
+    pub const fn value_to_base_u64(self, value: u64) -> u64 {
         match self {
-            Unit::Base => value,
-            Unit::Kilo => value * 1E3 as u64,
-            Unit::Mega => value * 1E6 as u64,
-            Unit::Giga => value * 1E9 as u64,
-            Unit::Tera => value * 1E12 as u64,
-            Unit::Kibi => value * 1024_u64,
-            Unit::Mibi => value * 1024_u64.pow(2),
-            Unit::Gibi => value * 1024_u64.pow(3),
-            Unit::Tebi => value * 1024_u64.pow(4),
+            Self::Base => value,
+            Self::Kilo => value * 1E3 as u64,
+            Self::Mega => value * 1E6 as u64,
+            Self::Giga => value * 1E9 as u64,
+            Self::Tera => value * 1E12 as u64,
+            Self::Kibi => value * 1024_u64,
+            Self::Mibi => value * 1024_u64.pow(2),
+            Self::Gibi => value * 1024_u64.pow(3),
+            Self::Tebi => value * 1024_u64.pow(4),
         }
     }
 }

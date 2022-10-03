@@ -242,14 +242,14 @@ pub enum Interpretation {
 #[derive(Debug, PartialEq)]
 enum ValueAlignment {
     /// align like this:
-    /// ```
+    /// ```ignore
     /// 123
     /// 1
     /// 1234
     /// ```
     Left,
     /// align like this:
-    /// ```
+    /// ```ignore
     ///  123
     ///    1
     /// 1234
@@ -282,12 +282,12 @@ impl OutputGroup {
     }
 
     #[allow(dead_code)]
-    pub fn title(&self) -> Interpretation {
+    pub const fn title(&self) -> Interpretation {
         self.title
     }
 
     #[allow(dead_code)]
-    pub fn interpretations(&self) -> &Vec<OutputLine> {
+    pub const fn interpretations(&self) -> &Vec<OutputLine> {
         &self.interpretations
     }
 

@@ -26,7 +26,7 @@ SOFTWARE.
 
 use derive_more::Display;
 
-#[derive(Debug, PartialEq, Copy, Clone, Display)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Display)]
 pub enum Sign {
     #[display(fmt = "")]
     Positive,
@@ -38,25 +38,25 @@ impl Sign {
     /// Parses the [`super::ns::NumeralSystem`] from the normalized and validated slice of the input
     /// that corresponds to this type.
     /// * `part_str` slice of normalized and validated user input that corresponds to this type
-    pub fn from_input(normalized_input: &str) -> Sign {
+    pub fn from_input(normalized_input: &str) -> Self {
         if normalized_input == "-" {
-            Sign::Negative
+            Self::Negative
         } else {
-            Sign::Positive
+            Self::Positive
         }
     }
 
     /// Convenient function to check if the sign is positive.
-    pub fn is_pos(&self) -> bool {
+    pub const fn is_pos(&self) -> bool {
         match self {
-            Sign::Positive => true,
-            Sign::Negative => false,
+            Self::Positive => true,
+            Self::Negative => false,
         }
     }
 
     /// Convenient function to check if the sign is positive.
     #[allow(dead_code)]
-    pub fn is_neg(&self) -> bool {
+    pub const fn is_neg(&self) -> bool {
         !self.is_pos()
     }
 }
