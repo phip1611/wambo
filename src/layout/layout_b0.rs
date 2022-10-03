@@ -28,11 +28,8 @@ fn draw_left(f: &mut Frame<impl Backend>, rect: Rect) {
             Style::default().add_modifier(Modifier::BOLD),
         )]),
         Spans::from(vec![
-            Span::raw(format!("Web version: ")),
-            Span::styled(
-                format!("https://wambo-web.de"),
-                Style::default().fg(Color::Yellow),
-            ),
+            Span::raw("Web version: "),
+            Span::styled("https://wambo-web.de", Style::default().fg(Color::Yellow)),
         ]),
     ];
     let paragraph = Paragraph::new(text)

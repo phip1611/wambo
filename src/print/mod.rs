@@ -288,7 +288,8 @@ impl OutputGroup {
         self.title
     }
 
-    pub fn iter(&self) -> OutputGroupIterator<'_> {
+    /// Returns an iterator of type [`OutputGroupIterator`].
+    pub const fn iter(&self) -> OutputGroupIterator<'_> {
         OutputGroupIterator::new(self)
     }
 }
@@ -304,7 +305,7 @@ pub struct OutputGroupIterator<'a> {
 }
 
 impl<'a> OutputGroupIterator<'a> {
-    fn new(og: &'a OutputGroup) -> Self {
+    const fn new(og: &'a OutputGroup) -> Self {
         OutputGroupIterator { og, line: 0 }
     }
 }

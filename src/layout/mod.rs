@@ -60,12 +60,11 @@ pub fn run_tui<B: Backend>(
         terminal.draw(|f| draw_tui(f, user_input))?;
 
         if let Event::Key(key) = event::read()? {
-            if let KeyCode::Char('q') = key.code {
-                return Ok(());
-            }
-            // triggered when CTRL+C is pressed, as `crossterm` catches
-            // all events and signals are not delivered normally
-            else if let KeyCode::Char('c') = key.code {
+            if key.code == KeyCode::Char('q') ||
+                // triggered when CTRL+C is pressed, as `crossterm` catches
+                // all events and signals are not delivered normally
+                key.code == KeyCode::Char('c')
+            {
                 return Ok(());
             }
         }
@@ -96,24 +95,24 @@ pub fn draw_tui(f: &mut Frame<impl Backend>, user_input: &ParsedUserInput) {
 
     let border_block = Block::default().borders(Borders::NONE);
 
-    f.render_widget(border_block.clone(), layout_main[0].clone());
-    let inner_rect = border_block.clone().inner(layout_main[0].clone());
+    f.render_widget(border_block.clone(), layout_main[0]);
+    let inner_rect = border_block.clone().inner(layout_main[0]);
     draw_b0_block(f, inner_rect, user_input);
 
-    f.render_widget(border_block.clone(), layout_main[1].clone());
-    let inner_rect = border_block.clone().inner(layout_main[1].clone());
+    f.render_widget(border_block.clone(), layout_main[1]);
+    let inner_rect = border_block.clone().inner(layout_main[1]);
     draw_b1_block(f, inner_rect, user_input);
 
-    f.render_widget(border_block.clone(), layout_main[2].clone());
-    let inner_rect = border_block.clone().inner(layout_main[2].clone());
+    f.render_widget(border_block.clone(), layout_main[2]);
+    let inner_rect = border_block.clone().inner(layout_main[2]);
     draw_b2_block(f, inner_rect, user_input);
 
-    f.render_widget(border_block.clone(), layout_main[3].clone());
-    let inner_rect = border_block.clone().inner(layout_main[3].clone());
+    f.render_widget(border_block.clone(), layout_main[3]);
+    let inner_rect = border_block.clone().inner(layout_main[3]);
     draw_b3_block(f, inner_rect, user_input);
 
-    f.render_widget(border_block.clone(), layout_main[3].clone());
-    let inner_rect = border_block.clone().inner(layout_main[4].clone());
+    f.render_widget(border_block.clone(), layout_main[3]);
+    let inner_rect = border_block.clone().inner(layout_main[4]);
     draw_b4_block(f, inner_rect, user_input);
 }
 
@@ -144,7 +143,7 @@ fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph {
                     format!("{key}: "),
                     Style::default().add_modifier(Modifier::BOLD),
                 ),
-                Span::raw(format!("{value}")),
+                Span::raw(value),
             ])
         })
         .collect::<Vec<_>>();
