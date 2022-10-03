@@ -144,7 +144,7 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
             FractionNumber::F64(Unit::base_to_target(Unit::Kilo, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Mega, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Giga, base_value_f64)),
-            FractionNumber::F64(Unit::base_to_target(Unit::Tera, base_value_f64)),            
+            FractionNumber::F64(Unit::base_to_target(Unit::Tera, base_value_f64)),
         ],
         MAX_PRECISION,
     );

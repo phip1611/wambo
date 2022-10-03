@@ -12,6 +12,11 @@ homepage = "https://github.com/phip1611/wambo"
 repository = "https://github.com/phip1611/wambo"
 documentation = "https://docs.rs/wambo/"
 
+exclude = [
+    ".editorconfig",
+    ".github",
+]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
