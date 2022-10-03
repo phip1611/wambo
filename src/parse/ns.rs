@@ -27,7 +27,7 @@ SOFTWARE.
 use derive_more::Display;
 
 /// Numeral system.
-#[derive(Debug, PartialEq, Copy, Clone, Display)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Display)]
 pub enum NumeralSystem {
     /// Base of 2 (0-1).
     #[display(fmt = "Binary (0b)")]
@@ -47,15 +47,15 @@ impl NumeralSystem {
     /// Parses the [`NumeralSystem`] from the normalized and validated slice of the input
     /// that corresponds to this type.
     /// * `part_str` slice of normalized and validated user input that corresponds to this type
-    pub fn from_input(part_str: &str) -> NumeralSystem {
+    pub fn from_input(part_str: &str) -> Self {
         if part_str.starts_with("0b") {
-            NumeralSystem::Bin
+            Self::Bin
         } else if part_str.starts_with("0o") {
-            NumeralSystem::Octal
+            Self::Octal
         } else if part_str.starts_with("0x") {
-            NumeralSystem::Hex
+            Self::Hex
         } else {
-            NumeralSystem::Decimal
+            Self::Decimal
         }
     }
 }

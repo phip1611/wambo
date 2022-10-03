@@ -1,7 +1,7 @@
 # wambo - All-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64, and f32/f64.
 
 **wambo** is a binary that can easily shows you a numeric value in all important
-numeral systems (bin, hex, dec) + interprets the input as both signed 
+numeral systems (bin, hex, dec) + interprets the input as both signed
 and unsigned values (from i8 to i64, including f32 and f64). It also
 easily calculates you mibibytes to bytes, kilobytes to gibibytes and so on.
 
@@ -66,3 +66,6 @@ MiB:        5119.195845603942871093
 GiB:           4.9992146929726004
 
 ```
+
+### MSRV
+The MSRV is `1.56.1`.

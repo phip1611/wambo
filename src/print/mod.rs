@@ -144,7 +144,7 @@ fn build_bytes(parsed: &Parsed) -> OutputGroup {
             FractionNumber::F64(Unit::base_to_target(Unit::Kilo, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Mega, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Giga, base_value_f64)),
-            FractionNumber::F64(Unit::base_to_target(Unit::Tera, base_value_f64)),            
+            FractionNumber::F64(Unit::base_to_target(Unit::Tera, base_value_f64)),
         ],
         MAX_PRECISION,
     );
@@ -242,14 +242,14 @@ pub enum Interpretation {
 #[derive(Debug, PartialEq)]
 enum ValueAlignment {
     /// align like this:
-    /// ```
+    /// ```ignore
     /// 123
     /// 1
     /// 1234
     /// ```
     Left,
     /// align like this:
-    /// ```
+    /// ```ignore
     ///  123
     ///    1
     /// 1234
@@ -282,12 +282,12 @@ impl OutputGroup {
     }
 
     #[allow(dead_code)]
-    pub fn title(&self) -> Interpretation {
+    pub const fn title(&self) -> Interpretation {
         self.title
     }
 
     #[allow(dead_code)]
-    pub fn interpretations(&self) -> &Vec<OutputLine> {
+    pub const fn interpretations(&self) -> &Vec<OutputLine> {
         &self.interpretations
     }
 

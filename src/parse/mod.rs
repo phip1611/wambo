@@ -94,9 +94,9 @@ pub struct Parsed {
     unit: Unit,
     sign: Sign,
     value: u64,
-    value_str: String,
 }
 
+#[allow(dead_code)]
 impl Parsed {
     fn new(
         normalized_input: String,
@@ -119,45 +119,40 @@ impl Parsed {
             unit,
             sign,
             value,
-            value_str,
         }
     }
 
     /// Getter for `normalized_input`.
-    #[allow(dead_code)]
     pub fn normalized_input(&self) -> &str {
         &self.normalized_input
     }
 
     /// Getter for `numeral_system`.
-    #[allow(dead_code)]
-    pub fn numeral_system(&self) -> NumeralSystem {
+    pub const fn numeral_system(&self) -> NumeralSystem {
         self.numeral_system
     }
 
     /// Getter for `sign`.
-    #[allow(dead_code)]
-    pub fn sign(&self) -> Sign {
+    pub const fn sign(&self) -> Sign {
         self.sign
     }
 
     /// Getter for `value`. The actual number
     /// as unsigned u64 in base unit. So if you input
     ///  `15KB` then this will be `15.000`.
-    pub fn value(&self) -> u64 {
+    pub const fn value(&self) -> u64 {
         self.value
     }
 
     /// Getter for `value_str`. The actual number
     /// but without numeral system or unit.
-    #[allow(dead_code)]
-    pub fn value_str(&self) -> u64 {
+    pub const fn value_str(&self) -> u64 {
         self.value
     }
 
     /// Getter for `unit`.
     #[allow(dead_code)]
-    pub fn unit(&self) -> Unit {
+    pub const fn unit(&self) -> Unit {
         self.unit
     }
 }
