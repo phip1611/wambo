@@ -15,9 +15,9 @@ documentation = "https://docs.rs/wambo/"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-regex = "1.4.3"
-derive_more = "0.99.11"
-crossterm = "0.19.0"
-fraction_list_fmt_align = "0.2.3"
+regex = "1.6.0"
+derive_more = "0.99"
+crossterm = "0.25"
+fraction_list_fmt_align = "0.2"
 # derive_more = { version = "0.99.11", features = ["derive"] }
 
