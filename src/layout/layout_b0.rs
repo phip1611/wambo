@@ -7,18 +7,34 @@ use tui::layout::Rect;
 pub fn draw_b0_block(f: &mut Frame<impl Backend>, parent_rect: Rect, user_input: &ParsedUserInput) {
     let layout_b0 = Layout::default()
         .direction(Direction::Horizontal)
-        .constraints([Constraint::Percentage(25), Constraint::Percentage(75)].as_ref())
+        .constraints(
+            [
+                Constraint::Percentage(49),
+                Constraint::Percentage(2),
+                Constraint::Percentage(49),
+            ]
+            .as_ref(),
+        )
         .split(parent_rect);
 
     draw_left(f, layout_b0[0]);
-    draw_right(f, layout_b0[1], user_input);
+    draw_right(f, layout_b0[2], user_input);
 }
 
 fn draw_left(f: &mut Frame<impl Backend>, rect: Rect) {
-    let text = vec![Spans::from(vec![Span::styled(
-        format!("WAMBO (v{})", env!("CARGO_PKG_VERSION")),
-        Style::default().add_modifier(Modifier::BOLD),
-    )])];
+    let text = vec![
+        Spans::from(vec![Span::styled(
+            format!("WAMBO (v{})", env!("CARGO_PKG_VERSION")),
+            Style::default().add_modifier(Modifier::BOLD),
+        )]),
+        Spans::from(vec![
+            Span::raw(format!("Web version: ")),
+            Span::styled(
+                format!("https://wambo-web.de"),
+                Style::default().fg(Color::Yellow),
+            ),
+        ]),
+    ];
     let paragraph = Paragraph::new(text)
         .block(Block::default().title("").borders(Borders::NONE))
         .style(Style::default().fg(Color::White).bg(Color::Black))

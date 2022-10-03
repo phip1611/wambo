@@ -84,7 +84,7 @@ pub fn draw_tui(f: &mut Frame<impl Backend>, user_input: &ParsedUserInput) {
         .direction(Direction::Vertical)
         .constraints(
             [
-                Constraint::Length(3),
+                Constraint::Length(4),
                 Constraint::Length(6),
                 Constraint::Length(7),
                 Constraint::Length(7),
@@ -137,6 +137,7 @@ pub fn tui_cleanup(mut terminal: Terminal<impl Backend + io::Write>) -> io::Resu
 fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph {
     let text = output_group
         .iter()
+        // map each (key,value) pair to a Span
         .map(|(key, value)| {
             Spans::from(vec![
                 Span::styled(
