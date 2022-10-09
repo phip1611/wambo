@@ -62,9 +62,9 @@ impl Unit {
             "g" | "gb" => Self::Giga,
             "t" | "tb" => Self::Tera,
             "ki" | "kib" => Self::Kibi,
-            "mi" | "mib" => Self::Mibi,
+            "mi" | "mib" | "mibi" | "meb" | "mebi" => Self::Mibi,
             "gi" | "gib" => Self::Gibi,
-            "ti" | "tib" => Self::Tebi,
+            "ti" | "tib" | "tibi" | "teb" | "tebi" => Self::Tebi,
             _ => return Err(ParseError::InvalidUnit(part_str.to_owned())),
         };
         Ok(x)

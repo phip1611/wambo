@@ -1,9 +1,9 @@
 [package]
 name = "wambo"
 description = "Wambo - All-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64, and f32/f64."
-version = "0.2.12"
+version = "0.3.0"
 authors = ["Philipp Schuster <phip1611@gmail.com>"]
-edition = "2018"
+edition = "2021"
 keywords = ["converter", "binary", "hex", "IEEE-754", "bytes"]
 categories = ["command-line-utilities"]
 readme = "README.md"
@@ -21,7 +21,8 @@ exclude = [
 
 [dependencies]
 crossterm = "0.25"
-derive_more = { version = "0.99.11", default-features = false, features = ["display"] }
+derive_more = { version = "0.99", default-features = false, features = ["display"] }
 fraction_list_fmt_align = "0.2"
-regex = "1.6.0"
+regex = "1.6"
+tui = "0.19" # uses crossterm as backend by default
 

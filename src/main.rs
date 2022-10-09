@@ -47,17 +47,31 @@ SOFTWARE.
 #![deny(missing_debug_implementations)]
 #![deny(rustdoc::all)]
 
+mod layout;
 mod parse;
 mod print;
 
-use crate::parse::parse_input;
-use crate::print::build_output_groups;
+use crate::parse::{parse_input, ParsedUserInput};
+use layout::*;
 use std::process::exit;
+use std::sync::atomic::AtomicBool;
+
+/// Turned to true if SIGINT or SIGTERM are received. Supports a graceful shutdown.
+pub static SIGNAL_STOP: AtomicBool = AtomicBool::new(false);
 
 /// **Wambo** is a binary and so far no library.
 /// It's an all-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64,
 /// and f32/f64.
 fn main() {
+    let parsed = validate_args_and_parse_input();
+
+    let mut tui = tui_prepare().unwrap();
+    run_tui(&mut tui, &parsed).unwrap();
+    tui_cleanup(tui).unwrap();
+}
+
+/// Validates the user input and parses it. Terminates the program, if the args are invalid.
+fn validate_args_and_parse_input() -> ParsedUserInput {
     let args = std::env::args().collect::<Vec<String>>();
     if args.len() == 1 {
         eprintln!(
@@ -73,20 +87,11 @@ fn main() {
     }
 
     let parsed = parse_input(input);
-    if let Err(e) = parsed {
-        eprintln!("Illegal input: {}", e);
-        exit(-1);
-    }
-    let parsed = parsed.unwrap();
-
-    let ogs = build_output_groups(parsed);
-    for (index, og) in ogs.iter().enumerate() {
-        og.pretty_print();
-
-        // print new line for all except the last item
-        if index < ogs.len() - 1 {
-            // one line to separate the output groups
-            println!();
+    match parsed {
+        Ok(parsed) => parsed,
+        Err(e) => {
+            eprintln!("Illegal input: {}", e);
+            exit(-1);
         }
     }
 }

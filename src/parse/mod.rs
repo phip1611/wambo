@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 use crate::parse::error::ParseError;
-use crate::parse::ns::NumeralSystem;
+pub use crate::parse::ns::NumeralSystem;
 use crate::parse::sign::Sign;
 use crate::parse::unit::Unit;
 use regex::Regex;
@@ -40,7 +40,7 @@ pub const INPUT_REGEX: &str =
 
 /// Takes the input, normalizes it, checks if it is valid
 /// and transform it into an usize value.
-pub fn parse_input(input: &str) -> Result<Parsed, ParseError> {
+pub fn parse_input(input: &str) -> Result<ParsedUserInput, ParseError> {
     let normalized_input = normalize_input(input);
 
     // validate and get input split
@@ -52,7 +52,7 @@ pub fn parse_input(input: &str) -> Result<Parsed, ParseError> {
     let sign = Sign::from_input(input_split.sign.unwrap_or(""));
     let value_str = input_split.value.unwrap().to_owned();
 
-    Ok(Parsed::new(
+    Ok(ParsedUserInput::new(
         normalized_input,
         numeral_system,
         value_str,
@@ -88,7 +88,7 @@ fn get_input_split(normalized_input: &str) -> Result<InputSplit, ParseError> {
 }
 
 #[derive(Debug)]
-pub struct Parsed {
+pub struct ParsedUserInput {
     normalized_input: String,
     numeral_system: NumeralSystem,
     unit: Unit,
@@ -97,7 +97,7 @@ pub struct Parsed {
 }
 
 #[allow(dead_code)]
-impl Parsed {
+impl ParsedUserInput {
     fn new(
         normalized_input: String,
         numeral_system: NumeralSystem,
