@@ -140,7 +140,7 @@ fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph {
         .map(|(key, value)| {
             Spans::from(vec![
                 Span::styled(
-                    format!("{key}: "),
+                    format!("{}: ", key),
                     Style::default().add_modifier(Modifier::BOLD),
                 ),
                 Span::raw(value),
