@@ -107,7 +107,7 @@ fn build_unsigned_integers_og(parsed: &ParsedUserInput) -> OutputGroup {
             },
             OutputLine {
                 key: "u64".to_string(),
-                value: format!("{}", parsed.value() as u64),
+                value: format!("{}", parsed.value()),
             },
         ],
     }
@@ -310,7 +310,7 @@ impl<'a> OutputGroupIterator<'a> {
     }
 }
 
-impl<'a> Iterator for OutputGroupIterator<'a> {
+impl Iterator for OutputGroupIterator<'_> {
     type Item = (String, String);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -380,7 +380,6 @@ fn format_num_add_delimiters(digits: &str, chunksize: usize) -> String {
     // transform _00000000_00000000 to 00000000_00000000 (remove leading underscore)
     formatted_with_delimiters
         .chars()
-        .into_iter()
         .skip(1) // skip first item
         .collect::<String>()
 }

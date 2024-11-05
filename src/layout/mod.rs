@@ -91,7 +91,7 @@ pub fn draw_tui(f: &mut Frame, user_input: &ParsedUserInput) {
             ]
             .as_ref(),
         )
-        .split(f.size());
+        .split(f.area());
 
     let border_block = Block::default().borders(Borders::NONE);
 
