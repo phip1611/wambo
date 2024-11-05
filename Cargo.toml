@@ -20,9 +20,9 @@ exclude = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-crossterm = "0.25"
-derive_more = { version = "0.99", default-features = false, features = ["display"] }
-fraction_list_fmt_align = "0.2"
-regex = "1.6"
+crossterm = "0.28"
+derive_more = { version = "1.0.0", default-features = false, features = ["display"] }
+fraction_list_fmt_align = "0.3"
+regex = "1.11"
 tui = "0.19" # uses crossterm as backend by default
 

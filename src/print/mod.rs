@@ -1,7 +1,7 @@
 use crate::parse::unit::Unit;
 use crate::parse::{NumeralSystem, ParsedUserInput};
 use derive_more::Display;
-use fraction_list_fmt_align::{fmt_align_fractions, FractionNumber};
+use fraction_list_fmt_align::{fmt_align_fractions, FormatPrecision, FractionNumber};
 
 const MAX_PRECISION: u8 = 4;
 
@@ -120,7 +120,7 @@ fn build_ieee754_og(parsed: &ParsedUserInput) -> OutputGroup {
     let f64_num = f64::from_ne_bytes(parsed.value().to_ne_bytes());
     let fmt_vec = fmt_align_fractions(
         &[FractionNumber::F32(f32_num), FractionNumber::F64(f64_num)],
-        MAX_PRECISION as u8,
+        FormatPrecision::Max(MAX_PRECISION),
     );
     OutputGroup {
         title: Interpretation::IEEE754,
@@ -152,7 +152,7 @@ fn build_bytes_og(parsed: &ParsedUserInput) -> OutputGroup {
             FractionNumber::F64(Unit::base_to_target(Unit::Giga, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Tera, base_value_f64)),
         ],
-        MAX_PRECISION,
+        FormatPrecision::Max(MAX_PRECISION),
     );
     OutputGroup {
         title: Interpretation::Bytes,
@@ -194,7 +194,7 @@ fn build_ibi_bytes_og(parsed: &ParsedUserInput) -> OutputGroup {
             FractionNumber::F64(Unit::base_to_target(Unit::Gibi, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Tebi, base_value_f64)),
         ],
-        MAX_PRECISION,
+        FormatPrecision::Max(MAX_PRECISION),
     );
     OutputGroup {
         title: Interpretation::Ibibytes,
@@ -229,19 +229,19 @@ fn build_ibi_bytes_og(parsed: &ParsedUserInput) -> OutputGroup {
 /// a specific class of interpretations.
 #[derive(Debug, Display, Copy, Clone)]
 pub enum Interpretation {
-    #[display(fmt = "Numeral Systems")]
+    #[display("Numeral Systems")]
     NumeralSystems,
-    #[display(fmt = "64 bit (Big Endian)")]
+    #[display("64 bit (Big Endian)")]
     Bit64BigEndian,
-    #[display(fmt = "Signed Integers")]
+    #[display("Signed Integers")]
     SignedIntegers,
-    #[display(fmt = "Unsigned Integers")]
+    #[display("Unsigned Integers")]
     UnsignedIntegers,
-    #[display(fmt = "Integer Bits as IEEE-754")]
+    #[display("Integer Bits as IEEE-754")]
     IEEE754,
-    #[display(fmt = "Size in Bytes")]
+    #[display("Size in Bytes")]
     Bytes,
-    #[display(fmt = "Size in *ebi/*ibi Bytes")]
+    #[display("Size in *ebi/*ibi Bytes")]
     Ibibytes,
 }
 

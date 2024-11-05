@@ -28,9 +28,9 @@ use derive_more::Display;
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Display)]
 pub enum Sign {
-    #[display(fmt = "")]
+    #[display("")]
     Positive,
-    #[display(fmt = "-")]
+    #[display("-")]
     Negative,
 }
 

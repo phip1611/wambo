@@ -31,9 +31,9 @@ use std::error::Error;
 pub enum ParseError {
     /// Tells that the input is not in valid format.
     /// The inner value describes the specific problem.
-    #[display(fmt = "Invalid format: {}", _0)]
+    #[display("Invalid format: {_0}")]
     InvalidFormat(String),
-    #[display(fmt = "Invalid unit: {}", _0)]
+    #[display("Invalid unit: {_0}")]
     InvalidUnit(String),
 }
 
