@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.4.0 (2024-11-05)
+- updated dependencies
+- MSRV is now 1.75.0
+
 ## v0.3.0 (2022-10-09)
 - uses the `tui`-crate for a nice interface
 - uses an alternate screen instead of printing to the regular terminal output

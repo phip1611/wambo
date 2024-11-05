@@ -11,6 +11,7 @@ license = "MIT"
 homepage = "https://github.com/phip1611/wambo"
 repository = "https://github.com/phip1611/wambo"
 documentation = "https://docs.rs/wambo/"
+rust-version = "1.75.0"
 
 exclude = [
     ".editorconfig",
