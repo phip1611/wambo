@@ -72,7 +72,7 @@ pub fn run_tui<B: Backend>(
 }
 
 /// Draw's the TUI.
-pub fn draw_tui(f: &mut Frame<impl Backend>, user_input: &ParsedUserInput) {
+pub fn draw_tui(f: &mut Frame, user_input: &ParsedUserInput) {
     // Constructs the main layout with 4 blocks:
     // - b0: heading block
     // - b1: numeral systems / f32/f64
