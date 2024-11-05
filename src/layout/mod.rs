@@ -42,13 +42,13 @@ use layout_b1::*;
 use layout_b2::*;
 use layout_b3::*;
 use layout_b4::*;
-use std::io;
 use ratatui::backend::{Backend, CrosstermBackend};
 use ratatui::layout::{Alignment, Constraint, Direction, Layout};
 use ratatui::style::{Color, Modifier, Style};
-use ratatui::text::{Span, Spans};
+use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
 use ratatui::{Frame, Terminal};
+use std::io;
 
 /// Displays the TUI and reacts to events, such as close.
 /// Wrapper around [`draw_tui`].
@@ -138,7 +138,7 @@ fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph {
         .iter()
         // map each (key,value) pair to a Span
         .map(|(key, value)| {
-            Spans::from(vec![
+            Line::from(vec![
                 Span::styled(
                     format!("{}: ", key),
                     Style::default().add_modifier(Modifier::BOLD),
