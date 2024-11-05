@@ -2,7 +2,7 @@
 
 use super::*;
 use crate::ParsedUserInput;
-use tui::layout::Rect;
+use ratatui::layout::Rect;
 
 pub fn draw_b0_block(f: &mut Frame<impl Backend>, parent_rect: Rect, user_input: &ParsedUserInput) {
     let layout_b0 = Layout::default()
