@@ -29,4 +29,4 @@ So, `$ wambo 0x40a00000` results in the output in the screenshot below.
 
 
 ### MSRV
-The MSRV is `1.56.1`.
+The MSRV is `1.75.0`.

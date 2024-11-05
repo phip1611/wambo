@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Philipp Schuster
+Copyright (c) 2024 Philipp Schuster
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,23 +29,23 @@ use derive_more::Display;
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Display)]
 pub enum Unit {
-    #[display(fmt = "(Base)")]
+    #[display("(Base)")]
     Base,
-    #[display(fmt = "Kilobyte")]
+    #[display("Kilobyte")]
     Kilo,
-    #[display(fmt = "Megabyte")]
+    #[display("Megabyte")]
     Mega,
-    #[display(fmt = "Gigabyte")]
+    #[display("Gigabyte")]
     Giga,
-    #[display(fmt = "Terabyte")]
+    #[display("Terabyte")]
     Tera,
-    #[display(fmt = "Kibibyte")]
+    #[display("Kibibyte")]
     Kibi,
-    #[display(fmt = "Mibibyte")]
+    #[display("Mibibyte")]
     Mibi,
-    #[display(fmt = "Gibibyte")]
+    #[display("Gibibyte")]
     Gibi,
-    #[display(fmt = "Tebibyte")]
+    #[display("Tebibyte")]
     Tebi,
 }
 

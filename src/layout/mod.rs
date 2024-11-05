@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Philipp Schuster
+Copyright (c) 2024 Philipp Schuster
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-//! Everything related to the [`tui`] layout.
+//! Everything related to the [`ratatui`] layout.
 
 mod layout_b0;
 mod layout_b1;
@@ -42,13 +42,13 @@ use layout_b1::*;
 use layout_b2::*;
 use layout_b3::*;
 use layout_b4::*;
+use ratatui::backend::{Backend, CrosstermBackend};
+use ratatui::layout::{Alignment, Constraint, Direction, Layout};
+use ratatui::style::{Color, Modifier, Style};
+use ratatui::text::{Line, Span};
+use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
+use ratatui::{Frame, Terminal};
 use std::io;
-use tui::backend::{Backend, CrosstermBackend};
-use tui::layout::{Alignment, Constraint, Direction, Layout};
-use tui::style::{Color, Modifier, Style};
-use tui::text::{Span, Spans};
-use tui::widgets::{Block, Borders, Paragraph, Wrap};
-use tui::{Frame, Terminal};
 
 /// Displays the TUI and reacts to events, such as close.
 /// Wrapper around [`draw_tui`].
@@ -72,7 +72,7 @@ pub fn run_tui<B: Backend>(
 }
 
 /// Draw's the TUI.
-pub fn draw_tui(f: &mut Frame<impl Backend>, user_input: &ParsedUserInput) {
+pub fn draw_tui(f: &mut Frame, user_input: &ParsedUserInput) {
     // Constructs the main layout with 4 blocks:
     // - b0: heading block
     // - b1: numeral systems / f32/f64
@@ -91,7 +91,7 @@ pub fn draw_tui(f: &mut Frame<impl Backend>, user_input: &ParsedUserInput) {
             ]
             .as_ref(),
         )
-        .split(f.size());
+        .split(f.area());
 
     let border_block = Block::default().borders(Borders::NONE);
 
@@ -132,13 +132,13 @@ pub fn tui_cleanup(mut terminal: Terminal<impl Backend + io::Write>) -> io::Resu
     terminal.show_cursor()
 }
 
-/// Transforms the lines of an [`OutputGroup`] to a [`tui`]-compatible [`Paragraph`].
+/// Transforms the lines of an [`OutputGroup`] to a [`ratatui`]-compatible [`Paragraph`].
 fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph {
     let text = output_group
         .iter()
         // map each (key,value) pair to a Span
         .map(|(key, value)| {
-            Spans::from(vec![
+            Line::from(vec![
                 Span::styled(
                     format!("{}: ", key),
                     Style::default().add_modifier(Modifier::BOLD),

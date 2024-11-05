@@ -1,7 +1,31 @@
+/*
+MIT License
+
+Copyright (c) 2024 Philipp Schuster
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 use crate::parse::unit::Unit;
 use crate::parse::{NumeralSystem, ParsedUserInput};
 use derive_more::Display;
-use fraction_list_fmt_align::{fmt_align_fractions, FractionNumber};
+use fraction_list_fmt_align::{fmt_align_fractions, FormatPrecision, FractionNumber};
 
 const MAX_PRECISION: u8 = 4;
 
@@ -107,7 +131,7 @@ fn build_unsigned_integers_og(parsed: &ParsedUserInput) -> OutputGroup {
             },
             OutputLine {
                 key: "u64".to_string(),
-                value: format!("{}", parsed.value() as u64),
+                value: format!("{}", parsed.value()),
             },
         ],
     }
@@ -120,7 +144,7 @@ fn build_ieee754_og(parsed: &ParsedUserInput) -> OutputGroup {
     let f64_num = f64::from_ne_bytes(parsed.value().to_ne_bytes());
     let fmt_vec = fmt_align_fractions(
         &[FractionNumber::F32(f32_num), FractionNumber::F64(f64_num)],
-        MAX_PRECISION as u8,
+        FormatPrecision::Max(MAX_PRECISION),
     );
     OutputGroup {
         title: Interpretation::IEEE754,
@@ -152,7 +176,7 @@ fn build_bytes_og(parsed: &ParsedUserInput) -> OutputGroup {
             FractionNumber::F64(Unit::base_to_target(Unit::Giga, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Tera, base_value_f64)),
         ],
-        MAX_PRECISION,
+        FormatPrecision::Max(MAX_PRECISION),
     );
     OutputGroup {
         title: Interpretation::Bytes,
@@ -194,7 +218,7 @@ fn build_ibi_bytes_og(parsed: &ParsedUserInput) -> OutputGroup {
             FractionNumber::F64(Unit::base_to_target(Unit::Gibi, base_value_f64)),
             FractionNumber::F64(Unit::base_to_target(Unit::Tebi, base_value_f64)),
         ],
-        MAX_PRECISION,
+        FormatPrecision::Max(MAX_PRECISION),
     );
     OutputGroup {
         title: Interpretation::Ibibytes,
@@ -229,19 +253,19 @@ fn build_ibi_bytes_og(parsed: &ParsedUserInput) -> OutputGroup {
 /// a specific class of interpretations.
 #[derive(Debug, Display, Copy, Clone)]
 pub enum Interpretation {
-    #[display(fmt = "Numeral Systems")]
+    #[display("Numeral Systems")]
     NumeralSystems,
-    #[display(fmt = "64 bit (Big Endian)")]
+    #[display("64 bit (Big Endian)")]
     Bit64BigEndian,
-    #[display(fmt = "Signed Integers")]
+    #[display("Signed Integers")]
     SignedIntegers,
-    #[display(fmt = "Unsigned Integers")]
+    #[display("Unsigned Integers")]
     UnsignedIntegers,
-    #[display(fmt = "Integer Bits as IEEE-754")]
+    #[display("Integer Bits as IEEE-754")]
     IEEE754,
-    #[display(fmt = "Size in Bytes")]
+    #[display("Size in Bytes")]
     Bytes,
-    #[display(fmt = "Size in *ebi/*ibi Bytes")]
+    #[display("Size in *ebi/*ibi Bytes")]
     Ibibytes,
 }
 
@@ -310,7 +334,7 @@ impl<'a> OutputGroupIterator<'a> {
     }
 }
 
-impl<'a> Iterator for OutputGroupIterator<'a> {
+impl Iterator for OutputGroupIterator<'_> {
     type Item = (String, String);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -380,7 +404,6 @@ fn format_num_add_delimiters(digits: &str, chunksize: usize) -> String {
     // transform _00000000_00000000 to 00000000_00000000 (remove leading underscore)
     formatted_with_delimiters
         .chars()
-        .into_iter()
         .skip(1) // skip first item
         .collect::<String>()
 }

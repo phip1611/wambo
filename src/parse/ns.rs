@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Philipp Schuster
+Copyright (c) 2024 Philipp Schuster
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,16 +30,16 @@ use derive_more::Display;
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Display)]
 pub enum NumeralSystem {
     /// Base of 2 (0-1).
-    #[display(fmt = "Bin (0b)")]
+    #[display("Bin (0b)")]
     Bin,
     /// Base of 8 (0-7).
-    #[display(fmt = "Oct (0o)")]
+    #[display("Oct (0o)")]
     Octal,
     /// Base of 10 (0-9).
-    #[display(fmt = "Dec")]
+    #[display("Dec")]
     Decimal,
     /// Base of 16 (0-F).
-    #[display(fmt = "Hex (0x)")]
+    #[display("Hex (0x)")]
     Hex,
 }
 

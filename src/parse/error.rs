@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Philipp Schuster
+Copyright (c) 2024 Philipp Schuster
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,9 +31,9 @@ use std::error::Error;
 pub enum ParseError {
     /// Tells that the input is not in valid format.
     /// The inner value describes the specific problem.
-    #[display(fmt = "Invalid format: {}", _0)]
+    #[display("Invalid format: {_0}")]
     InvalidFormat(String),
-    #[display(fmt = "Invalid unit: {}", _0)]
+    #[display("Invalid unit: {_0}")]
     InvalidUnit(String),
 }
 
