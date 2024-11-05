@@ -1,7 +1,7 @@
 [package]
 name = "wambo"
 description = "All-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64, and f32/f64."
-version = "0.3.1"
+version = "0.4.0"
 authors = ["Philipp Schuster <phip1611@gmail.com>"]
 edition = "2021"
 keywords = ["converter", "binary", "hex", "IEEE-754", "bytes"]
