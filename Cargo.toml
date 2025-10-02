@@ -21,7 +21,7 @@ exclude = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-crossterm = "0.28"
+crossterm = "0.29"
 derive_more = { version = "1.0.0", default-features = false, features = ["display"] }
 fraction_list_fmt_align = "0.3"
 regex = "1.11"
