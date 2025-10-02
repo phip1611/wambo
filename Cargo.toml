@@ -22,7 +22,7 @@ exclude = [
 
 [dependencies]
 crossterm = "0.29"
-derive_more = { version = "1.0.0", default-features = false, features = ["display"] }
+derive_more = { version = "2.0.1", default-features = false, features = ["display"] }
 fraction_list_fmt_align = "0.3"
 regex = "1.11"
 ratatui = "0.28" # uses crossterm as backend by default
