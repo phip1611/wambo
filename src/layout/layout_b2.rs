@@ -24,8 +24,8 @@ SOFTWARE.
 //! Code related to the B02 block.
 
 use super::*;
-use crate::print::{get_output_group, Interpretation};
 use crate::ParsedUserInput;
+use crate::print::{Interpretation, get_output_group};
 use ratatui::layout::Rect;
 
 pub fn draw_b2_block(f: &mut Frame, parent_rect: Rect, user_input: &ParsedUserInput) {

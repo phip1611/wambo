@@ -1,9 +1,9 @@
 [package]
 name = "wambo"
-description = "All-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64, and f32/f64."
-version = "0.4.0"
+description = "Helper tool for converting decimal/bin/oct/hex + interpreting data as i8-i64, u8-u64, and f32/f64."
+version = "0.5.0"
 authors = ["Philipp Schuster <phip1611@gmail.com>"]
-edition = "2021"
+edition = "2024"
 keywords = ["converter", "binary", "hex", "IEEE-754", "bytes"]
 categories = ["command-line-utilities"]
 readme = "README.md"
@@ -11,7 +11,7 @@ license = "MIT"
 homepage = "https://github.com/phip1611/wambo"
 repository = "https://github.com/phip1611/wambo"
 documentation = "https://docs.rs/wambo/"
-rust-version = "1.75.0"
+rust-version = "1.85.0"
 
 exclude = [
     ".editorconfig",
@@ -21,9 +21,9 @@ exclude = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-crossterm = "0.28"
-derive_more = { version = "1.0.0", default-features = false, features = ["display"] }
+crossterm = "0.29"
+derive_more = { version = "2.0.0", default-features = false, features = ["display"] }
 fraction_list_fmt_align = "0.3"
 regex = "1.11"
-ratatui = "0.28" # uses crossterm as backend by default
+ratatui = "0.29" # uses crossterm as backend by default
 

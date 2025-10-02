@@ -30,11 +30,11 @@ mod layout_b2;
 mod layout_b3;
 mod layout_b4;
 
-use crate::print::OutputGroup;
 use crate::ParsedUserInput;
+use crate::print::OutputGroup;
 use crossterm::event::{Event, KeyCode};
 use crossterm::terminal::{
-    disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen,
+    EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode,
 };
 use crossterm::{event, execute};
 use layout_b0::*;
@@ -133,7 +133,7 @@ pub fn tui_cleanup(mut terminal: Terminal<impl Backend + io::Write>) -> io::Resu
 }
 
 /// Transforms the lines of an [`OutputGroup`] to a [`ratatui`]-compatible [`Paragraph`].
-fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph {
+fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph<'_> {
     let text = output_group
         .iter()
         // map each (key,value) pair to a Span
@@ -148,7 +148,7 @@ fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph {
         })
         .collect::<Vec<_>>();
 
-    let paragraph = Paragraph::new(text)
+    Paragraph::new(text)
         .block(
             Block::default()
                 .title(format!("{}", output_group.title()))
@@ -168,7 +168,5 @@ fn output_group_to_widget(output_group: &OutputGroup) -> Paragraph {
         )
         .alignment(Alignment::Left)
         // don't trim whitespaces, as this will break alignment
-        .wrap(Wrap { trim: false });
-
-    paragraph
+        .wrap(Wrap { trim: false })
 }

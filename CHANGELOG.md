@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+- Updated dependencies
+- MSRV is now 1.85
+- Rust edition is now 2024
+
 ## v0.4.0 (2024-11-05)
 - updated dependencies
 - MSRV is now 1.75.0

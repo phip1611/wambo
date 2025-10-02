@@ -79,9 +79,9 @@ impl Unit {
             Self::Giga => value / 1E9_f64,
             Self::Tera => value / 1E12_f64,
             Self::Kibi => value / 1024_f64,
-            Self::Mibi => value / 1024_f64.powf(2_f64),
-            Self::Gibi => value / 1024_f64.powf(3_f64),
-            Self::Tebi => value / 1024_f64.powf(4_f64),
+            Self::Mibi => value / 1024_f64.powi(2),
+            Self::Gibi => value / 1024_f64.powi(3),
+            Self::Tebi => value / 1024_f64.powi(4),
         }
     }
 

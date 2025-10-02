@@ -25,7 +25,7 @@ SOFTWARE.
 use crate::parse::unit::Unit;
 use crate::parse::{NumeralSystem, ParsedUserInput};
 use derive_more::Display;
-use fraction_list_fmt_align::{fmt_align_fractions, FormatPrecision, FractionNumber};
+use fraction_list_fmt_align::{FormatPrecision, FractionNumber, fmt_align_fractions};
 
 const MAX_PRECISION: u8 = 4;
 

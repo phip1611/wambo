@@ -71,7 +71,7 @@ struct InputSplit<'a> {
 
 /// Validates the input against [`INPUT_REGEX`] and returns all the named
 /// input groups.
-fn get_input_split(normalized_input: &str) -> Result<InputSplit, ParseError> {
+fn get_input_split(normalized_input: &str) -> Result<InputSplit<'_>, ParseError> {
     let regex = Regex::new(INPUT_REGEX).unwrap();
     let captures = regex
         .captures(normalized_input)

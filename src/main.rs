@@ -22,25 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-//! **Wambo** is a binary and so far no library.
-//! It's an all-in-one binary to convert decimal/bin/oct/hex + interpret data as i8-i64, u8-u64,
-//! and f32/f64.
+//! **Wambo** - Helper tool for converting decimal/bin/oct/hex + interpreting
+//! data as i8-i64, u8-u64, and f32/f64.
 
-#![deny(
-    clippy::all,
-    clippy::cargo,
-    clippy::nursery,
-    // clippy::restriction,
-    // clippy::pedantic
-)]
-// now allow a few rules which are denied by the above statement
-// --> they are ridiculous and not necessary
-#![allow(
-    clippy::fallible_impl_from,
-    clippy::needless_doctest_main,
-    clippy::redundant_pub_crate,
-    clippy::suboptimal_flops
-)]
+#![deny(clippy::all, clippy::cargo, clippy::nursery)]
+#![allow(clippy::multiple_crate_versions)]
 // required because the produced code by `derive_more` doesn't follow this rule
 #![allow(clippy::use_self)]
 #![deny(missing_docs)]
@@ -51,7 +37,7 @@ mod layout;
 mod parse;
 mod print;
 
-use crate::parse::{parse_input, ParsedUserInput};
+use crate::parse::{ParsedUserInput, parse_input};
 use layout::*;
 use std::process::exit;
 use std::sync::atomic::AtomicBool;
