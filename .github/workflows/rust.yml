@@ -29,6 +29,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: ${{ matrix.rust }}
+      - uses: Swatinem/rust-cache@v2
       - name: Build
         run: cargo build --all-targets --verbose
       - name: Run tests
@@ -47,6 +48,7 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
       - name: Rustfmt
         run: cargo fmt -- --check
       - name: Clippy
